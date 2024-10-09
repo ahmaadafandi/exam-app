@@ -1,0 +1,663 @@
+@import 'assets/scss/style.scss';
+
+.nav-outside.mob-backdrop {
+  &.mob-fixed .pcoded-navbar {
+    z-index: 1032;
+  }
+  ~ .pcoded-outside {
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1031;
+      background: rgba(0, 0, 0, 0.25);
+    }
+  }
+}
+.pcoded-header .dropdown .notification .noti-body li {
+  width: 100%;
+}
+
+.header-chat .h-list-footer .input-group {
+  .btn-attach {
+    padding: 0;
+    width: 35px;
+    height: 35px;
+  }
+
+  .btn-send {
+    top: 7px;
+  }
+}
+
+.main-search {
+  padding: 16px 12px;
+}
+
+@media only screen and (max-width: 991px) {
+  .nav-outside {
+    ~ {
+      .pcoded-header,
+      .pcoded-main-container {
+        margin-left: 0;
+      }
+    }
+
+    &.mob-fixed ~ .pcoded-main-container {
+      padding-top: 142px;
+    }
+  }
+
+  .pcoded-header .navbar-nav > li:last-child {
+    padding-right: 35px;
+  }
+}
+
+.box {
+  display: inline-block;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.img-preview {
+  overflow: hidden;
+}
+
+.img-preview-section-container {
+  display: none;
+}
+
+.carousel-inner {
+  overflow: visible;
+  z-index: 1050;
+}
+@media only screen and (max-width: 991px) {
+  .pcoded-header,
+  .pcoded-main-container {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+.card-header .card-header-right {
+  .dropdown-menu.show {
+    transform: none !important;
+    right: 0 !important;
+    top: 100% !important;
+    left: auto !important;
+  }
+}
+
+header.navbar.pcoded-header.navbar-expand-lg.header-default.headerpos-fixed {
+  background: $theme-background;
+}
+
+header.navbar.pcoded-header.navbar-expand-lg.header-default.headerpos-fixed .b-brand .b-title {
+  color: $menu-light-text-color;
+}
+
+header.navbar.pcoded-header.navbar-expand-lg.header-default.headerpos-fixed .mobile-menu span,
+header.navbar.pcoded-header.navbar-expand-lg.header-default.headerpos-fixed .mobile-menu span:after,
+header.navbar.pcoded-header.navbar-expand-lg.header-default.headerpos-fixed .mobile-menu span:before {
+  background-color: $menu-light-text-color;
+}
+
+header.navbar.pcoded-header.navbar-expand-lg.header-default .mobile-menu.on span {
+  background-color: transparent;
+}
+
+@media only screen and (max-width: 991px) {
+  .pcoded-navbar {
+    z-index: 1072;
+  }
+
+  header.navbar.pcoded-header.navbar-expand-lg.header-default.headerpos-fixed {
+    background: $header-dark-background;
+  }
+
+  header.navbar.pcoded-header.navbar-expand-lg.header-default.headerpos-fixed .b-brand .b-title {
+    color: $header-dark-text-color;
+  }
+
+  header.navbar.pcoded-header.navbar-expand-lg.header-default.headerpos-fixed .mobile-menu span,
+  header.navbar.pcoded-header.navbar-expand-lg.header-default.headerpos-fixed .mobile-menu span:after,
+  header.navbar.pcoded-header.navbar-expand-lg.header-default.headerpos-fixed .mobile-menu span:before {
+    background-color: $header-dark-text-color;
+  }
+
+  header.navbar.pcoded-header.navbar-expand-lg.header-default .mobile-menu.on span {
+    background-color: transparent;
+  }
+}
+
+.user-activity .tab-content {
+  padding-top: 5px;
+}
+
+.user-activity .card {
+  box-shadow: none;
+  --bs-card-bg: transparent;
+}
+
+.form-control[type='file'] {
+  height: auto;
+  padding-left: 0.45rem;
+}
+.table {
+  .badge {
+    margin-right: 0.25rem;
+  }
+}
+.mb-3.row {
+  > .col,
+  .col.d-flex {
+    @media (max-width: 768px) {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      &:nth-child(2) {
+        flex-direction: column;
+        text-align: left;
+        > span {
+          justify-content: flex-start !important;
+          .form-control {
+            max-width: 150px;
+          }
+        }
+        .btn {
+          margin-top: 8px;
+          max-width: fit-content;
+          margin-left: 0 !important;
+        }
+      }
+    }
+  }
+}
+
+.row.justify-content-between > .col > .d-flex.align-items-center strong {
+  margin: 0 5px;
+}
+
+@media (max-width: 575px) {
+  .row.justify-content-between > *[class*='col-'],
+  .row.justify-content-between > .col {
+    flex: 100%;
+    .pagination {
+      justify-content: flex-start !important;
+    }
+    &:first-child {
+      margin-bottom: 8px;
+    }
+    > .d-flex.align-items-center {
+      input {
+        width: 40px !important;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+  }
+}
+td {
+  img.wid-40 {
+    max-width: 40px;
+  }
+}
+.new-cust-card {
+  @media (max-width: 1024px) {
+    .d-inline-block {
+      width: calc(100% - 55px);
+    }
+    .align-middle .status {
+      position: relative;
+      top: 0;
+      left: 0;
+    }
+  }
+}
+.table th,
+.table td {
+  vertical-align: middle;
+}
+.cover-img-block {
+  overflow: hidden;
+  z-index: 1;
+}
+.user-about-block {
+  position: relative;
+  z-index: 5;
+}
+@media only screen and (max-width: 1200px) {
+  .user-card .user-about-block {
+    margin-top: -10px;
+  }
+}
+
+.alert {
+  .float-right {
+    margin-left: 8px;
+    float: none !important;
+  }
+}
+@media (max-width: 768px) {
+  .modal-open .modal {
+    padding-left: 0 !important;
+  }
+}
+.carousel.slide {
+  overflow: hidden;
+}
+
+.table.table-bordered.table-hover {
+  th {
+    select.form-control {
+      min-width: 140px;
+    }
+  }
+}
+
+//
+// Components Layer
+.show-entries {
+  margin-left: 1rem; // tw-ml-4
+  display: flex;
+  justify-content: center;
+
+  @media (min-width: 1024px) {
+    justify-content: flex-start; // lg:tw-justify-start
+  }
+
+  p.show-entries-show {
+    margin-right: 0.25rem; // tw-mr-1
+    margin-top: 0.25rem; // tw-mt-1
+    color: #2d3748; // tw-text-gray-800
+  }
+
+  p.show-entries-entries {
+    margin-left: 0.25rem; // tw-ml-1
+    margin-top: 0.25rem; // tw-mt-1
+    color: #2d3748; // tw-text-gray-800
+  }
+
+  select {
+    border-radius: 0.5rem; // tw-rounded-lg
+    border: 1px solid #e2e8f0; // tw-border-gray-200
+  }
+}
+
+.search-column {
+  margin-bottom: 1.25rem; // tw-mb-5
+  margin-top: 0.75rem; // tw-mt-3
+  display: flex;
+  justify-content: center;
+
+  @media (min-width: 1024px) {
+    margin-top: -2.8125rem; // lg:tw-mt-[-45px]
+    justify-content: flex-start; // lg:tw-justify-start
+  }
+
+  p {
+    margin-right: 0.25rem; // tw-mr-1
+    margin-top: 0.25rem; // tw-mt-1
+    color: #2d3748; // tw-text-gray-800
+
+    @media (min-width: 1024px) {
+      margin-left: auto; // lg:tw-ml-auto
+    }
+  }
+
+  input {
+    margin-right: 1rem; // tw-mr-4
+    width: 66.666667%; // tw-w-2/3
+
+    @media (min-width: 1024px) {
+      width: 25%; // lg:tw-w-1/4
+    }
+
+    border-radius: 0.5rem; // tw-rounded-lg
+    border: 1px solid #e2e8f0; // tw-border-gray-200
+  }
+}
+
+// Utilities Layer
+body {
+  letter-spacing: 0.05em; // tw-tracking-wider
+}
+
+.section-header > h1 {
+  letter-spacing: 0.05em; // tw-tracking-wider
+}
+
+table {
+  width: 100%; // tw-w-full
+  table-layout: fixed; // tw-table-fixed
+}
+
+table > thead > tr {
+  font-size: 0.75rem; // tw-text-xs
+  text-transform: uppercase; // tw-uppercase
+  letter-spacing: 0.1em; // tw-tracking-widest
+}
+
+table > tbody > tr {
+  color: #4a5568; // tw-text-gray-700
+}
+
+table > thead > tr > th {
+  background-color: #f7fafc; // tw-bg-gray-100
+  padding: 1rem; // tw-p-4
+  color: #718096; // tw-text-gray-600
+}
+
+table > tbody > tr > td {
+  border-bottom: 1px solid #e2e8f0; // tw-border-b tw-border-gray-100
+  padding: 1rem; // tw-p-4
+}
+
+.card-body > h3 {
+  margin-bottom: 1.25rem; // tw-mb-5
+  margin-left: 1rem; // tw-ml-4
+  font-size: 1rem; // tw-text-base
+  color: #1a202c; // tw-text-black
+}
+
+.main-content {
+  padding-left: 0; // tw-px-0
+  padding-right: 0; // tw-px-0
+}
+
+.card {
+  border-radius: 0; // tw-rounded-none
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); // tw-shadow-md tw-shadow-gray-300
+
+  @media (min-width: 1024px) {
+    border-radius: 0.5rem; // lg:tw-rounded-lg
+  }
+}
+
+.section-body {
+  margin-top: -0.625rem; // tw-mt-[-10px]
+}
+
+input.form-control,
+select.form-control,
+textarea.form-control {
+  border-radius: 0.5rem; // tw-rounded-lg
+  border: 1px solid #e2e8f0; // tw-border-gray-200
+  font-size: 0.875rem; // tw-text-sm
+}
+
+.navbar.navbar-expand-lg.main-navbar {
+  padding-left: 0; // tw-px-0
+  padding-right: 0; // tw-px-0
+
+  @media (min-width: 1024px) {
+    padding-left: 1.25rem; // lg:tw-px-5
+    padding-right: 1.25rem; // lg:tw-px-5
+  }
+}
+
+.btn-modal {
+  position: fixed; // tw-fixed
+  bottom: 3rem; // tw-bottom-12
+  right: 1.75rem; // tw-right-7
+  z-index: 40; // tw-z-40
+  height: 3.5rem; // tw-h-14
+  width: 3.5rem; // tw-w-14
+  border-radius: 50%; // tw-rounded-full
+  background-color: #3b82f6; // tw-bg-blue-500
+  color: white; // tw-text-white
+  box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.2); // tw-shadow-2xl
+
+  &:hover {
+    border-color: #1e40af; // hover:tw-border-blue-600
+    background-color: #1e3a8a; // hover:tw-bg-blue-900
+  }
+}
+
+// modal
+// Keyframes untuk animasi buka dan tutup modal dengan efek zoom
+@keyframes modalZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.7); // Mengecil
+  }
+  to {
+    opacity: 1;
+    transform: scale(1); // Kembali ke ukuran asli
+  }
+}
+
+@keyframes modalZoomOut {
+  from {
+    opacity: 1;
+    transform: scale(1); // Ukuran normal
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.7); // Mengecil saat menutup
+  }
+}
+
+// Styling modal
+.modal.fade {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+
+  &.show {
+    display: block;
+    animation: modalZoomIn 0.5s ease forwards; // Animasi modal masuk
+  }
+
+  &.hide {
+    animation: modalZoomOut 0.5s ease forwards; // Animasi modal keluar
+    opacity: 0;
+  }
+}
+
+// Styling modal dialog box
+.modal-dialog {
+  max-width: 600px;
+  margin: 1.75rem auto;
+  transform: scale(0.7);
+  transition: all 0.5s ease-out;
+  animation: modalZoomIn 0.5s ease forwards;
+}
+
+// Background dimming effect (Tanpa animasi)
+.modal-backdrop {
+  opacity: 0;
+  transition: opacity 0.3s ease-out; // Hanya transisi opacity tanpa animasi
+
+  &.show {
+    opacity: 0.5; // Background lebih gelap, tidak ada animasi, hanya transisi sederhana
+    transition: opacity 0.3s ease-in;
+  }
+}
+
+// Modal header styling
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+  position: relative;
+}
+
+// Tombol close dengan animasi rotate dan color change
+.modal-header .close {
+  background-color: transparent;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  cursor: pointer;
+  color: #000;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
+
+  &:hover {
+    color: #e74c3c; // Ubah warna saat hover
+    transform: rotate(90deg); // Animasi rotate saat hover
+  }
+}
+
+// Modal body styling
+.modal-body {
+  padding: 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #333;
+}
+
+// Modal footer styling
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-top: 1px solid #ddd;
+  background-color: #f5f5f5;
+}
+
+// ck editor
+.ck {
+  &.ck-editor__editable {
+    height: 300px;
+  }
+}
+
+//
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(32, 30, 30, 0.8); // Optional: semi-transparent background
+  z-index: 9999; // Ensure it covers other elements
+}
+
+.message {
+  font-size: 1.5em;
+  margin-top: 0.25em;
+  color: #777;
+  text-align: center;
+  // Uncomment the following lines if animation is needed
+  // -webkit-animation: fade 3s ease-in-out 0s infinite;
+  // animation: fade 3s ease-in-out 0s infinite;
+}
+
+#diamonds {
+  .diamond {
+    stroke: #bbb;
+  }
+
+  .left {
+    stroke: #8e857b;
+  }
+
+  .center {
+    stroke: #00adbb;
+    opacity: 0.6;
+  }
+
+  .right {
+    stroke: #8e9090;
+    opacity: 0.6;
+  }
+
+  &.animate {
+    .diamond {
+      // Uncomment the following lines if needed
+      // stroke-dasharray: 1000;
+      // stroke-dashoffset: 1000;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+      transform-origin: center;
+      animation: draw 3s ease-in-out forwards; // Menggunakan animasi draw
+    }
+
+    .center {
+      -webkit-animation-delay: 0.25s;
+      animation-delay: 0.25s;
+      animation: fade 3s ease-in-out infinite; // Menggunakan animasi fade
+    }
+
+    .right {
+      -webkit-animation-delay: 0.5s;
+      animation-delay: 0.5s;
+      animation: fade 3s ease-in-out infinite; // Menggunakan animasi fade
+    }
+  }
+}
+
+// Keyframes untuk menggambar
+@-webkit-keyframes draw {
+  0%,
+  80%,
+  100% {
+    stroke-dashoffset: 1000; // Menyembunyikan garis
+  }
+  40% {
+    stroke-dashoffset: 0; // Menampilkan garis
+  }
+}
+
+@keyframes draw {
+  0%,
+  80%,
+  100% {
+    stroke-dashoffset: 1000; // Menyembunyikan garis
+  }
+  40% {
+    stroke-dashoffset: 0; // Menampilkan garis
+  }
+}
+
+// Keyframes untuk fade
+@-webkit-keyframes fade {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fade {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+// css logo user setting
+.settings-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
