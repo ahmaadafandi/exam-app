@@ -24,6 +24,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('/users', App\Http\Controllers\UserController::class);
     Route::resource('/soal', App\Http\Controllers\SoalController::class);
+    Route::resource('/jenis', App\Http\Controllers\JenisController::class);
 });
 
 Route::post('/soal/ckeditor/image', [App\Http\Controllers\SoalController::class, 'soalCkeditorImage']);

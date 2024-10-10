@@ -40,10 +40,10 @@ const menuItems = {
               url: '/soal'
             },
             {
-              id: 'breadcrumb',
-              title: 'Breadcrumb & Pagination',
+              id: 'jenis_soal',
+              title: 'Jenis Soal',
               type: 'item',
-              url: '/basic/breadcrumb-paging'
+              url: '/soal-jenis'
             },
             {
               id: 'collapse',

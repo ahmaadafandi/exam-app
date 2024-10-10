@@ -141,6 +141,12 @@ const routes = [
         element: lazy(() => import('./views/soal/ManageSoal'))
       },
 
+      {
+        exact: 'true',
+        path: '/soal-jenis',
+        element: lazy(() => import('./views/soal/Jenis'))
+      },
+
       //
       {
         path: '*',
