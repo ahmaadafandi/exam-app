@@ -162,10 +162,10 @@ const BootstrapTable = () => {
 
   const handleDelete = (id) => {
     axios
-      .delete(`${appConfig.baseurlAPI}/users/${id}`)
+      .delete(`${appConfig.baseurlAPI}/soal/${id}`)
       .then((data) => {
         console.log('Success:', data);
-        setUser(rows.filter((row) => row.id !== id));
+        setSoal(rows.filter((row) => row.id !== id));
         setTotalRows(totalRows - 1);
         MySwal.fire({
           title: 'Successfully!',

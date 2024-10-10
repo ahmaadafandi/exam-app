@@ -48,6 +48,11 @@ class SoalController extends Controller
                         $query->where('jenis_id', '=', $jenis_id);
                         // $query->orWhere('tipe', 'LIKE', "%{$search}%");
                     })->latest()->paginate($perPage);
+                }else{
+                    $data = Soal::where(function($query) use ($search) {
+                        $query->where('soal', 'LIKE', "%{$search}%");
+                        // $query->orWhere('tipe', 'LIKE', "%{$search}%");
+                    })->latest()->paginate($perPage);
                 }
             }else{
                 $data = Soal::where(function($query) use ($search) {
@@ -280,7 +285,25 @@ class SoalController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try 
+        {
+            $data   = Soal::findOrFail($id);
+            $data->delete();
+
+            return response()->json([
+                'data'      => $data,
+                'success'   => true,
+                'message'   => 'Data deleted successfully'
+            ], JsonResponse::HTTP_OK);
+        } 
+        catch (Exception $e) 
+        {
+            return response()->json([
+                'data'      => [],
+                'success'   => false,
+                'message'   => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
     }
 
     public function soalCkeditorImage(Request $request) 
