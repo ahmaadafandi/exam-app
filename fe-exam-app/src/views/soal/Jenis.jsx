@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Row, Col, Card, Table } from 'react-bootstrap';
+import { Row, Col, Card, Table, Modal, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -28,6 +28,10 @@ const BootstrapTable = () => {
   const MySwal = withReactContent(Swal);
 
   const [showModal, setShowModal] = useState(false);
+  const [showMultipleInsertModal, setShowMultipleInsertModal] = useState(false);
+
+  const handleCloseMultipleInsertModal = () => setShowMultipleInsertModal(false);
+  const handleShowMultipleInsertModal = () => setShowMultipleInsertModal(true);
 
   useEffect(() => {
     axios
@@ -361,14 +365,9 @@ const BootstrapTable = () => {
                       ))}
                   </select>
                 </div>
-                <button
-                  data-toggle="modal"
-                  data-target="#formDataMultipleModal"
-                  onClick={handleAdd}
-                  className="btn btn-outline-primary ml-auto"
-                >
+                <Button variant="primary" onClick={handleShowMultipleInsertModal}>
                   Add Multiple
-                </button>
+                </Button>
               </div>
               <SearchEntries showing={showing} handleShow={handleShow} searchTerm={searchTerm} handleSearch={handleSearch} />
               <Table responsive hover>
@@ -473,6 +472,20 @@ const BootstrapTable = () => {
           {/* Other cards remain the same */}
         </Col>
       </Row>
+      <Modal show={showMultipleInsertModal} onHide={handleCloseMultipleInsertModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal 1</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Ini adalah isi dari modal 1!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseMultipleInsertModal}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleCloseMultipleInsertModal}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
       {showModal && (
         <div
           className="modal fade show d-block"
