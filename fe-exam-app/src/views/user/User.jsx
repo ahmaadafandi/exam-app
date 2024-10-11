@@ -7,7 +7,7 @@ import withReactContent from 'sweetalert2-react-content';
 import axios from 'axios';
 import { debounce } from 'lodash';
 import { useNavigate } from 'react-router-dom';
-import { Row, Col, Card, Table } from 'react-bootstrap';
+import { Row, Col, Card, Table, Modal, Button } from 'react-bootstrap';
 import appConfig from 'config/appConfig';
 import InputValidation from 'components/Form/InputValidation';
 // import ModalFooter from 'components/Form/ModalFooter';
@@ -55,6 +55,8 @@ const User = () => {
 
   const [modalData, setModalData] = useState(null);
   const [isEditing, setIsEditing] = useState(null);
+
+  const [isLoadingBtn, setIsLoadingBtn] = useState(false);
 
   /**
    * Initial form, reset input fields, and validate the form
@@ -135,7 +137,7 @@ const User = () => {
     console.log('oke');
   };
 
-  const handleClose = () => setShowModal(false);
+  const handleCloseModal = () => setShowModal(false);
 
   const handleEdit = async (id) => {
     try {
@@ -177,6 +179,7 @@ const User = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setIsLoadingBtn(true);
 
     if (!isEditing) {
       if (validateForm()) {
@@ -198,6 +201,7 @@ const User = () => {
                 setShowModal(false);
                 setRefetch(Math.random());
                 setFormData(initialFormData);
+                setIsLoadingBtn(false);
               });
             } else {
               throw new Error('Network response was not ok');
@@ -211,6 +215,7 @@ const User = () => {
               icon: 'error',
               timer: 2000
             });
+            setIsLoadingBtn(false);
           });
       }
     } else {
@@ -240,6 +245,7 @@ const User = () => {
                 setShowModal(false);
                 setRefetch(Math.random()); // refetch new data
                 setFormData(initialFormData); // set initial value for input
+                setIsLoadingBtn(false);
               });
             } else {
               throw new Error('Network response was not ok');
@@ -253,6 +259,7 @@ const User = () => {
               icon: 'error',
               timer: 2000
             });
+            setIsLoadingBtn(false);
           });
       }
     }
@@ -430,7 +437,108 @@ const User = () => {
           </Card>
         </Col>
       </Row>
-      {showModal && (
+      <Modal show={showModal} onHide={handleCloseModal} backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title>{isEditing ? 'Edit Data' : 'Add Data'}</Modal.Title>
+        </Modal.Header>
+
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+          <Modal.Body>
+            <div className="form-group">
+              <label htmlFor="avatar">Avatar</label>
+              <input type="file" name="avatar" id="avatar" className="form-control" onChange={handleFileChange} />
+            </div>
+            <InputValidation
+              label="Name"
+              name="name"
+              type="text"
+              value={formData.name}
+              onChange={handleInputChange}
+              error={formErrors.name}
+            />
+            <InputValidation
+              label="Email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              error={formErrors.email}
+            />
+
+            <InputValidation
+              label="Password"
+              name="password"
+              type="password"
+              value={formData.password || ''}
+              onChange={handleInputChange}
+              error={formErrors.password}
+            />
+
+            <div className="form-group">
+              <label htmlFor="role">Role user</label>
+              <select
+                name="role"
+                id="role"
+                className={`form-control ${formErrors.role ? 'is-invalid' : ''}`}
+                value={formData.role || ''}
+                onChange={handleInputChange}
+              >
+                <option value="">-- Selected Option --</option>
+                <option value="user">User</option>
+                <option value="administrator">Administrator</option>
+              </select>
+              {formErrors.role && <div className="invalid-feedback">{formErrors.role}</div>}
+            </div>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button type="button" variant="secondary" onClick={handleCloseModal}>
+              Tutup
+            </Button>
+            <Button type="submit" variant="primary">
+              {!isLoadingBtn ? (
+                'Simpan'
+              ) : (
+                <div className="d-flex justify-content-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
+                    <g stroke="currentColor">
+                      <circle cx="12" cy="12" r="9.5" fill="none" strokeLinecap="round" strokeWidth="3">
+                        <animate
+                          attributeName="stroke-dasharray"
+                          calcMode="spline"
+                          dur="1.5s"
+                          keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1"
+                          keyTimes="0;0.475;0.95;1"
+                          repeatCount="indefinite"
+                          values="0 150;42 150;42 150;42 150"
+                        />
+                        <animate
+                          attributeName="stroke-dashoffset"
+                          calcMode="spline"
+                          dur="1.5s"
+                          keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1"
+                          keyTimes="0;0.475;0.95;1"
+                          repeatCount="indefinite"
+                          values="0;-16;-59;-59"
+                        />
+                      </circle>
+                      <animateTransform
+                        attributeName="transform"
+                        dur="2s"
+                        repeatCount="indefinite"
+                        type="rotate"
+                        values="0 12 12;360 12 12"
+                      />
+                    </g>
+                  </svg>
+                  <span className=""> Loading...</span>
+                </div>
+              )}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+      {/* {showModal && (
         <div
           className="modal fade show d-block"
           id="formDataModal"
@@ -508,7 +616,7 @@ const User = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </React.Fragment>
   );
 };

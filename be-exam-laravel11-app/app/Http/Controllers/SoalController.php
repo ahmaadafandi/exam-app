@@ -24,7 +24,10 @@ class SoalController extends Controller
             $search = $request->get('search', '');
 
             $paket_to = PaketTo::all();
-            $jenis = Jenis::join('kategoris', 'kategoris.id', 'jenis.kategori_id')->get(['jenis.*', 'kategoris.kategori']);
+            $jenis = Jenis::select('jenis.*', 'kategoris.kategori')
+                        ->join('kategoris', 'kategoris.id', '=', 'jenis.kategori_id')
+                        ->orderBy('jenis.kategori_id')
+                        ->get();
 
             if($request->has('paket_to_id') && $request->has('jenis_id')){
                 $paket_to_id = $request->get('paket_to_id');
@@ -88,7 +91,10 @@ class SoalController extends Controller
         try 
         {
             $paket_to = PaketTo::all();
-            $jenis = Jenis::join('kategoris', 'kategoris.id', 'jenis.kategori_id')->get(['jenis.*', 'kategoris.kategori']);
+            $jenis = Jenis::select('jenis.*', 'kategoris.kategori')
+                    ->join('kategoris', 'kategoris.id', '=', 'jenis.kategori_id')
+                    ->orderBy('jenis.kategori_id')
+                    ->get();
 
             return response()->json([
                 'jenis'      => $jenis,
