@@ -10,7 +10,7 @@ import appConfig from 'config/appConfig';
 import TextAreaValidation from 'components/Form/TextareaValidation';
 import Loading from 'components/Loader/Loading';
 
-const BootstrapTable = () => {
+const ManageSoal = () => {
   const navigate = useNavigate();
 
   const { id } = useParams(); // Ambil id dari route parameter
@@ -403,4 +403,4 @@ const BootstrapTable = () => {
   );
 };
 
-export default BootstrapTable;
+export default ManageSoal;

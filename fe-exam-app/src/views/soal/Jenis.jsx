@@ -31,11 +31,17 @@ const BootstrapTable = () => {
   const [showMultipleInsertModal, setShowMultipleInsertModal] = useState(false);
 
   const handleCloseMultipleInsertModal = () => setShowMultipleInsertModal(false);
-  const handleShowMultipleInsertModal = () => setShowMultipleInsertModal(true);
+
+  const handleShowMultipleInsertModal = () => {
+    setInputs(initialMultipleInputs);
+    setShowMultipleInsertModal(true);
+  };
 
   useEffect(() => {
     axios
-      .get(`${appConfig.baseurlAPI}/jenis?page=${currentPage}&per_page=${showing}&search=${searchTerm}&showing=${showing}`)
+      .get(
+        `${appConfig.baseurlAPI}/jenis?page=${currentPage}&per_page=${showing}&search=${searchTerm}&showing=${showing}&kategori_id=${selectedKategori}`
+      )
       .then((data) => {
         console.log(data.data);
         setJenis(data.data.data.data);
@@ -57,34 +63,25 @@ const BootstrapTable = () => {
   const [modalData, setModalData] = useState(null);
   const [isEditing, setIsEditing] = useState(null);
 
-  const [selectedKategori, setSelectedKategoselectedKategori] = useState('');
+  const [selectedKategori, setSelectedKategori] = useState('');
 
   /**
    * Initial form, reset input fields, and validate the form
    */
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: '',
-    avatar: null
+    kategori: '',
+    jenis: ''
   });
 
   const initialFormData = {
-    name: '',
-    email: '',
-    password: '',
-    role: '',
-    avatar: null
+    kategori: '',
+    jenis: ''
   };
 
   const [formErrors, setFormErrors] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: '',
-    avatar: null
+    kategori: '',
+    jenis: ''
   });
 
   const validateForm = () => {
@@ -92,9 +89,9 @@ const BootstrapTable = () => {
     let formIsValid = true;
 
     // Validate input name
-    if (!formData.name) {
+    if (!formData.kategori) {
       formIsValid = false;
-      errors.name_gallery = 'Name is required';
+      errors.kategori = 'kategori is required';
     }
 
     setFormErrors(errors);
@@ -118,12 +115,15 @@ const BootstrapTable = () => {
 
   const handleSearch = (event) => {
     const value = event.target.value;
+    setCurrentPage(1);
     setSearchTerm(value);
     handleSearchDebounced(value);
   };
 
   const handleShow = (event) => {
+    setIsLoading(true);
     setShowing(parseInt(event.target.value));
+    setCurrentPage(1);
   };
 
   /**
@@ -138,23 +138,15 @@ const BootstrapTable = () => {
     console.log('oke');
   };
 
-  const handleClose = () => setShowModal(false);
+  const handleCloseModal = () => setShowModal(false);
 
-  const handleEdit = async (id) => {
+  const handleEdit = (id) => {
     try {
-      const response = await axios.get(`${appConfig.baseurlAPI}/users/${id}`);
-      const userData = response.data;
-
       const data = rows.find((row) => row.id === id);
 
-      setRole(userData.role);
-
       setFormData({
-        name: data.name,
-        email: data.email,
-        password: '',
-        role: userData.role,
-        avatar: null
+        kategori: data.kategori_id,
+        jenis: data.jenis
       });
 
       setModalData(data);
@@ -169,39 +161,35 @@ const BootstrapTable = () => {
     }
   };
 
-  const handleChangeKategori = (event) => {
+  const handleChangeKategori = async (event) => {
     setIsLoading(true);
-    const jenis_id = event.target.value;
-    setSelectedJenis(jenis_id);
-    console.log(jenis_id);
-    axios
-      .get(
-        `${appConfig.baseurlAPI}/soal?page=${currentPage}&per_page=${showing}&search=${searchTerm}&showing=${showing}&jenis_id=${jenis_id}&paket_to_id=${selectedPaketTo}`
-      )
-      .then((data) => {
-        console.log(data.data);
-        setSoal(data.data.data.data);
-        setTotalPages(data.data.data.last_page);
-        setTotalRows(data.data.data.total);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        if (error.response.status === 403) {
-          navigate('/403');
-        } else {
-          console.log(error);
-        }
-        setIsLoading(false);
-      });
+    const kategori_id_filter = event.target.value;
+    setSelectedKategori(kategori_id_filter);
+    console.log(kategori_id_filter);
+
+    try {
+      const response = await axios.get(
+        `${appConfig.baseurlAPI}/jenis?page=${currentPage}&per_page=${showing}&search=${searchTerm}&showing=${showing}&kategori_id=${kategori_id_filter}`
+      );
+
+      console.log(response.data);
+      setJenis(response.data.data.data);
+      setTotalPages(response.data.data.last_page);
+      setTotalRows(response.data.data.total);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        navigate('/403');
+      } else {
+        console.log(error);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
-  };
-
-  const handleFileChange = (event) => {
-    setFormData({ ...formData, avatar: event.target.files[0] });
   };
 
   const handleSubmit = (event) => {
@@ -210,7 +198,7 @@ const BootstrapTable = () => {
     if (!isEditing) {
       if (validateForm()) {
         axios
-          .post(`${appConfig.baseurlAPI}/users`, formData, {
+          .post(`${appConfig.baseurlAPI}/jenis`, formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
@@ -245,23 +233,20 @@ const BootstrapTable = () => {
     } else {
       if (validateForm()) {
         const data = new FormData();
-        data.append('name', formData.name);
-        data.append('email', formData.email);
-        data.append('password', formData.password);
-        data.append('role', formData.role);
-        data.append('avatar', formData.avatar);
+        data.append('kategori', formData.kategori);
+        data.append('jenis', formData.jenis);
         data.append('_method', 'put');
         axios
-          .post(`${appConfig.baseurlAPI}/users/${modalData.id}`, data, {
+          .post(`${appConfig.baseurlAPI}/jenis/${modalData.id}`, data, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           })
           .then((response) => {
-            if (response.status === 200) {
+            if (response.status === 201) {
               Swal.fire({
                 title: 'Success!',
-                text: response.data.message,
+                text: 'Data updated successfully',
                 icon: 'success',
                 timer: 1500
               }).then(() => {
@@ -309,10 +294,10 @@ const BootstrapTable = () => {
 
   const handleDelete = (id) => {
     axios
-      .delete(`${appConfig.baseurlAPI}/users/${id}`)
+      .delete(`${appConfig.baseurlAPI}/jenis/${id}`)
       .then((data) => {
         console.log('Success:', data);
-        setUser(rows.filter((row) => row.id !== id));
+        setJenis(rows.filter((row) => row.id !== id));
         setTotalRows(totalRows - 1);
         MySwal.fire({
           title: 'Successfully!',
@@ -328,6 +313,69 @@ const BootstrapTable = () => {
           html: 'Something went wrong.',
           icon: 'error',
           timer: 2000
+        });
+      });
+  };
+
+  /**
+   * Handle Add multiple data
+   */
+
+  const [inputs, setInputs] = useState([{ kategori_id: '', jenis: '' }]);
+
+  const initialMultipleInputs = [
+    {
+      kategori_id: '',
+      jenis: ''
+    }
+  ];
+
+  const handleAddMultiple = () => {
+    const newInput = { kategori_id: '', jenis: '' };
+    setInputs([...inputs, newInput]);
+  };
+
+  const handleRemoveMultiple = (index) => {
+    const newInputs = [...inputs];
+    newInputs.splice(index, 1);
+    setInputs(newInputs);
+  };
+
+  const handleSubmitMultiple = (event) => {
+    event.preventDefault();
+
+    axios
+      .post(
+        `${appConfig.baseurlAPI}/jenis/multiple-store`,
+        { inputs: inputs },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      .then((response) => {
+        if (response.status === 201) {
+          Swal.fire({
+            title: 'Success!',
+            text: 'Data created successfully',
+            icon: 'success',
+            timer: 1500
+          }).then(() => {
+            setShowMultipleInsertModal(false);
+            setRefetch(Math.random());
+            setInputs(initialMultipleInputs);
+          });
+        } else {
+          throw new Error('Network response was not ok');
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        MySwal.fire({
+          title: 'Oops...',
+          html: error.response.data.message,
+          icon: 'error'
         });
       });
   };
@@ -348,8 +396,8 @@ const BootstrapTable = () => {
               <div className="d-flex justify-content-between mb-3">
                 <div className="form-group">
                   <select
-                    name="kategori_id"
-                    id="kategori_id"
+                    name="kategori_id_filter"
+                    id="kategori_id_filter"
                     className={`form-control`}
                     value={selectedKategori}
                     onChange={handleChangeKategori}
@@ -472,89 +520,150 @@ const BootstrapTable = () => {
           {/* Other cards remain the same */}
         </Col>
       </Row>
-      <Modal show={showMultipleInsertModal} onHide={handleCloseMultipleInsertModal}>
+      <Modal show={showMultipleInsertModal} onHide={handleCloseMultipleInsertModal} backdrop="static">
         <Modal.Header closeButton>
-          <Modal.Title>Modal 1</Modal.Title>
+          <Modal.Title>{isEditing ? 'Edit Data' : 'Add Data'}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Ini adalah isi dari modal 1!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseMultipleInsertModal}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleCloseMultipleInsertModal}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      {showModal && (
-        <div
-          className="modal fade show d-block"
-          id="formDataModal"
-          aria-labelledby="formDataModalLabel"
-          aria-hidden="true"
-          style={{ background: 'rgba(0,0,0,0.5)' }}
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="formDataModalLabel">
-                  {isEditing ? 'Edit Data' : 'Add Data'}
-                </h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={handleClose}>
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <form onSubmit={handleSubmit} encType="multipart/form-data">
-                <div className="modal-body">
-                  <div className="row">
-                    <div className="form-group col-md-4">
-                      <label htmlFor="kategori">Kategori</label>
-                      <select
-                        name="kategori"
-                        id="kategori"
-                        className={`form-control ${formErrors.kategori ? 'is-invalid' : ''}`}
-                        value={formData.kategori || ''}
-                        onChange={handleInputChange}
-                      >
-                        <option value="">-- Selected Option --</option>
 
-                        {Array.isArray(kategori) &&
-                          kategori.length &&
-                          kategori.map((row, index) => (
-                            <option value={row.id} key={index}>
-                              {row.kategori}
-                            </option>
-                          ))}
-                      </select>
-                      {formErrors.kategori && <div className="invalid-feedback">{formErrors.kategori}</div>}
-                    </div>
-
-                    <div className="form-group col-md-8">
-                      <label htmlFor="jenis">Jenis</label>
-                      <input
-                        name="jenis"
-                        id="jenis"
-                        className={`form-control ${formErrors.jenis ? 'is-invalid' : ''}`}
-                        value={formData.jenis}
-                        onChange={handleInputChange}
-                      />
-                      {formErrors.jenis && <div className="invalid-feedback">{formErrors.jenis}</div>}
-                    </div>
-                  </div>
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary tw-bg-gray-300" data-dismiss="modal" onClick={handleClose}>
-                    Close
-                  </button>
-                  <button type="submit" className="btn btn-primary tw-bg-blue-500">
-                    Save Data
-                  </button>
-                </div>
-              </form>
+        <form onSubmit={handleSubmitMultiple}>
+          <Modal.Body>
+            <div className="table-responsive">
+              <table>
+                <thead>
+                  <tr className="text-center">
+                    <th>Kategori</th>
+                    <th>Jenis</th>
+                    <th width="12%">
+                      <i className="fas fa-cogs"></i>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inputs.map((input, index) => (
+                    <tr key={index}>
+                      <td>
+                        <select
+                          className="form-control"
+                          value={input.kategori_id || ''}
+                          onChange={(e) => {
+                            const newInputs = [...inputs];
+                            newInputs[index].kategori_id = e.target.value; // Perbaiki typo di sini
+                            setInputs(newInputs);
+                          }}
+                        >
+                          <option value="">-- Selected Option --</option>
+                          {Array.isArray(kategori) &&
+                            kategori.length &&
+                            kategori.map((row) => (
+                              <option value={row.id} key={row.id}>
+                                {row.kategori}
+                              </option>
+                            ))}
+                        </select>
+                      </td>
+                      <td>
+                        <input
+                          value={input.jenis}
+                          className="form-control"
+                          onChange={(e) => {
+                            const newInputs = [...inputs];
+                            newInputs[index].jenis = e.target.value;
+                            setInputs(newInputs);
+                          }}
+                        />
+                      </td>
+                      <td className="text-center">
+                        <button
+                          type="button"
+                          className="btn btn-danger p-2"
+                          onClick={() => handleRemoveMultiple(index)}
+                          aria-label="Remove Row"
+                        >
+                          <div className="m-1">
+                            <i className="fas fa-trash"></i>
+                          </div>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          </div>
-        </div>
-      )}
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button
+              type="button"
+              variant="success"
+              onClick={handleAddMultiple}
+              className="me-auto" // Menempatkan tombol ini di kiri
+            >
+              <i className="fas fa-plus-square"></i> Tambah Baris
+            </Button>
+            <Button type="button" variant="secondary" onClick={handleCloseMultipleInsertModal}>
+              Close
+            </Button>
+            <Button type="submit" variant="primary">
+              Save
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+
+      <Modal show={showModal} onHide={handleCloseModal} backdrop="static">
+        <Modal.Header closeButton>
+          <Modal.Title>{isEditing ? 'Edit Data' : 'Add Data'}</Modal.Title>
+        </Modal.Header>
+
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+          <Modal.Body>
+            <div className="row">
+              <div className="form-group col-md-4">
+                <label htmlFor="kategori">Kategori</label>
+                <select
+                  name="kategori"
+                  id="kategori"
+                  className={`form-control ${formErrors.kategori ? 'is-invalid' : ''}`}
+                  value={formData.kategori || ''}
+                  onChange={handleInputChange}
+                >
+                  <option value="">-- Selected Option --</option>
+
+                  {Array.isArray(kategori) &&
+                    kategori.length &&
+                    kategori.map((row, index) => (
+                      <option value={row.id} key={index}>
+                        {row.kategori}
+                      </option>
+                    ))}
+                </select>
+                {formErrors.kategori && <div className="invalid-feedback">{formErrors.kategori}</div>}
+              </div>
+
+              <div className="form-group col-md-8">
+                <label htmlFor="jenis">Jenis</label>
+                <input
+                  name="jenis"
+                  id="jenis"
+                  className={`form-control ${formErrors.jenis ? 'is-invalid' : ''}`}
+                  value={formData.jenis}
+                  onChange={handleInputChange}
+                />
+                {formErrors.jenis && <div className="invalid-feedback">{formErrors.jenis}</div>}
+              </div>
+            </div>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button type="button" variant="secondary" onClick={handleCloseModal}>
+              Close
+            </Button>
+            <Button type="submit" variant="primary">
+              Save
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
     </React.Fragment>
   );
 };

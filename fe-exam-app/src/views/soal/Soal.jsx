@@ -9,7 +9,7 @@ import axios from 'axios';
 import { debounce } from 'lodash';
 import appConfig from 'config/appConfig';
 
-const BootstrapTable = () => {
+const Soal = () => {
   const navigate = useNavigate();
 
   const [rows, setSoal] = useState([]);
@@ -33,7 +33,9 @@ const BootstrapTable = () => {
 
   useEffect(() => {
     axios
-      .get(`${appConfig.baseurlAPI}/soal?page=${currentPage}&per_page=${showing}&search=${searchTerm}&showing=${showing}`)
+      .get(
+        `${appConfig.baseurlAPI}/soal?page=${currentPage}&per_page=${showing}&search=${searchTerm}&showing=${showing}&jenis_id=${selectedJenis}&paket_to_id=${selectedPaketTo}`
+      )
       .then((data) => {
         console.log(data.data);
         setSoal(data.data.data.data);
@@ -70,12 +72,15 @@ const BootstrapTable = () => {
 
   const handleSearch = (event) => {
     const value = event.target.value;
+    setCurrentPage(1);
     setSearchTerm(value);
     handleSearchDebounced(value);
   };
 
   const handleShow = (event) => {
+    setIsLoading(true);
     setShowing(parseInt(event.target.value));
+    setCurrentPage(1);
   };
 
   //   hadle request
@@ -250,7 +255,7 @@ const BootstrapTable = () => {
                     Array.isArray(rows) && rows.length ? (
                       rows.map((row, index) => (
                         <tr key={index}>
-                          <td className="text-center">{index + 1}</td>
+                          <td className="text-center">{(currentPage - 1) * showing + index + 1}</td>
                           {/* <td>
                             <a href={appConfig.baseURL + '/storage/images/' + row.avatar} target="_blank" rel="noopener noreferrer">
                               <img
@@ -362,4 +367,4 @@ const BootstrapTable = () => {
   );
 };
 
-export default BootstrapTable;
+export default Soal;

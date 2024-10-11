@@ -7,6 +7,7 @@ use App\Models\Kategori;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class JenisController extends Controller
 {
@@ -22,9 +23,17 @@ class JenisController extends Controller
             
             $kategori = Kategori::all();
 
-            $data = Jenis::where(function($query) use ($search) {
-                        $query->where('jenis', 'LIKE', "%{$search}%");
-                    })->latest()->paginate($perPage);
+            if(!empty($request->get('kategori_id'))){
+                $kategori_id = $request->get('kategori_id');
+                $data = Jenis::where(function($query) use ($search, $kategori_id) {
+                    $query->where('jenis', 'LIKE', "%{$search}%");
+                    $query->where('kategori_id', '=', $kategori_id);
+                })->latest()->paginate($perPage);
+            }else{
+                $data = Jenis::where(function($query) use ($search) {
+                            $query->where('jenis', 'LIKE', "%{$search}%");
+                        })->latest()->paginate($perPage);
+            }
 
             return response()->json([
                 'data'      => $data,
@@ -55,7 +64,36 @@ class JenisController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = Validator::make($request->all(), [
+            'kategori'       => 'required',
+            'jenis'      => 'required',
+        ]);
+
+        try 
+        {
+            if ($validatedData->fails()){
+                return response()->json(['success' => false, 'message' => $validatedData->errors()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            }
+            
+            $data   = Jenis::create([
+                'kategori_id'    => $request->input('kategori'),
+                'jenis'   => $request->input('jenis'),
+            ]); ;
+
+            return response()->json([
+                'data'      => $data,
+                'success'   => true,
+                'message'   => 'Data created successfully'
+            ], JsonResponse::HTTP_CREATED);
+        } 
+        catch (Exception $e) 
+        {
+            return response()->json([
+                'data'      => [],
+                'success'   => false,
+                'message'   => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
     }
 
     /**
@@ -71,7 +109,23 @@ class JenisController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        try 
+        {
+            $data   = Jenis::findOrFail($id);
+
+            return response()->json([
+                'data'      => $data,
+                'success'   => true,
+            ], JsonResponse::HTTP_OK);
+        } 
+        catch (Exception $e) 
+        {
+            return response()->json([
+                'data'      => [],
+                'success'   => false,
+                'message'   => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
     }
 
     /**
@@ -79,7 +133,36 @@ class JenisController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validatedData = Validator::make($request->all(), [
+            'kategori'       => 'required',
+            'jenis'      => 'required',
+        ]);
+
+        try 
+        {
+            if ($validatedData->fails()){
+                return response()->json(['success' => false, 'message' => $validatedData->errors()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            }
+            
+            $data   = Jenis::findOrFail($id)->update([
+                'kategori_id'    => $request->input('kategori'),
+                'jenis'   => $request->input('jenis'),
+            ]); ;
+
+            return response()->json([
+                'data'      => $data,
+                'success'   => true,
+                'message'   => 'Data created successfully'
+            ], JsonResponse::HTTP_CREATED);
+        } 
+        catch (Exception $e) 
+        {
+            return response()->json([
+                'data'      => [],
+                'success'   => false,
+                'message'   => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
     }
 
     /**
@@ -87,6 +170,53 @@ class JenisController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try 
+        {
+            $data   = Jenis::findOrFail($id)->delete();
+
+            return response()->json([
+                'data'      => $data,
+                'success'   => true,
+                'message'   => 'Data deleted successfully'
+            ], JsonResponse::HTTP_OK);
+        } 
+        catch (Exception $e) 
+        {
+            return response()->json([
+                'data'      => [],
+                'success'   => false,
+                'message'   => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
+    }
+
+    public function multipleStore(Request $request)
+    {
+        $validatedData = $request->validate([
+            'inputs.*.kategori_id' => 'required',
+            'inputs.*.jenis' => ''
+        ]);
+
+        try 
+        {
+            $createdData = [];
+            foreach ($validatedData['inputs'] as $input) {
+                $createdData[] = Jenis::create($input);
+            }
+
+            return response()->json([
+                'data'      => $createdData,
+                'success'   => true,
+                'message'   => 'Data created successfully'
+            ], JsonResponse::HTTP_CREATED);
+        } 
+        catch (Exception $e) 
+        {
+            return response()->json([
+                'data'      => [],
+                'success'   => false,
+                'message'   => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
     }
 }
