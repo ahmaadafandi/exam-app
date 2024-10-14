@@ -23,9 +23,17 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('/users', App\Http\Controllers\UserController::class);
+
     Route::resource('/soal', App\Http\Controllers\SoalController::class);
+    Route::post('/soal/jawaban/multiple-store', [App\Http\Controllers\SoalController::class, 'multipleStore']);
+    Route::get('/soal/{soal_id}/kunci-jawaban', [App\Http\Controllers\SoalController::class, 'getKunciJawaban']);
+    Route::delete('/soal/kunci-jawaban/{id}', [App\Http\Controllers\SoalController::class, 'deleteKunciJawaban']);
+    
     Route::resource('/jenis', App\Http\Controllers\JenisController::class);
     Route::post('/jenis/multiple-store', [App\Http\Controllers\JenisController::class, 'multipleStore']);
+    
+    Route::resource('/paket', App\Http\Controllers\PaketController::class);
+    Route::post('/paket/multiple-store', [App\Http\Controllers\PaketController::class, 'multipleStore']);
 });
 
 Route::post('/soal/ckeditor/image', [App\Http\Controllers\SoalController::class, 'soalCkeditorImage']);

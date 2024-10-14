@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Jenis;
 use App\Models\Kategori;
+use App\Models\KunciJawaban;
 use App\Models\PaketTo;
 use App\Models\Soal;
 use Exception;
@@ -293,6 +294,7 @@ class SoalController extends Controller
     {
         try 
         {
+            $data   = KunciJawaban::where('soal_id',$id)->delete();
             $data   = Soal::findOrFail($id);
             $data->delete();
 
@@ -337,4 +339,68 @@ class SoalController extends Controller
             ]);
         }
     }
+
+    public function multipleStore(Request $request)
+    {
+        $validatedData = $request->validate([
+            'soal_id' => 'required',
+            'inputs.*.jawaban' => 'required',
+            'inputs.*.nilai' => 'required'
+        ]);
+
+        try 
+        {
+            $createdData = [];
+            foreach ($validatedData['inputs'] as $input) {
+                // Menambahkan soal_id ke dalam input
+                $input['soal_id'] = $validatedData['soal_id'];
+
+                $createdData[] = KunciJawaban::create($input);
+            }
+
+            return response()->json([
+                'data'      => $createdData,
+                'success'   => true,
+                'message'   => 'Data created successfully'
+            ], JsonResponse::HTTP_CREATED);
+        } 
+        catch (Exception $e) 
+        {
+            return response()->json([
+                'data'      => [],
+                'success'   => false,
+                'message'   => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
+    }
+
+    public function getKunciJawaban($soal_id)
+    {
+        $kunciJawaban = KunciJawaban::where('soal_id', $soal_id)->get();
+        return response()->json($kunciJawaban);
+    }
+
+    public function deleteKunciJawaban($id)
+    {
+        try 
+        {
+            $data   = KunciJawaban::findOrFail($id);
+            $data->delete();
+
+            return response()->json([
+                'data'      => $data,
+                'success'   => true,
+                'message'   => 'Data deleted successfully'
+            ], JsonResponse::HTTP_OK);
+        } 
+        catch (Exception $e) 
+        {
+            return response()->json([
+                'data'      => [],
+                'success'   => false,
+                'message'   => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
+    }
+
 }

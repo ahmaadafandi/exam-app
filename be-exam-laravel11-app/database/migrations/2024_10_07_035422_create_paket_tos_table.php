@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('paket_tos', function (Blueprint $table) {
             $table->id();
-            $table->string('paket');
+            $table->string('paket', 150);
+            $table->integer('jlh_soal');
+            $table->string('waktu', 150);
             $table->timestamps();
         });
     }

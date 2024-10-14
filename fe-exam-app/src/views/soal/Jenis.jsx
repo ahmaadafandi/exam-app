@@ -10,7 +10,7 @@ import SearchEntries from 'components/Table/SearchEntries';
 import Pagination from 'components/Table/Pagination';
 import InputValidation from 'components/Form/InputValidation';
 
-const BootstrapTable = () => {
+const Jenis = () => {
   const navigate = useNavigate();
   const [rows, setJenis] = useState([]);
   const [kategori, setKategori] = useState([]);
@@ -395,16 +395,17 @@ const BootstrapTable = () => {
       <Row>
         <Col>
           <Card>
-            <Card.Header>
-              <Card.Title as="h5">Jenis Soal</Card.Title>
-              <span className="d-block m-t-5">
-                use bootstrap <code>Table</code> component
-              </span>
-            </Card.Header>
-            <Card.Body>
-              <label>Kategori</label>
-              <div className="d-flex justify-content-between mb-3">
-                <div className="form-group">
+            <Card.Header className="d-flex justify-content-between">
+              <div>
+                <Card.Title as="h5">Jenis Soal</Card.Title>
+                <span className="d-block m-t-5">
+                  use bootstrap <code>Table</code> component
+                </span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <div className="form-group" style={{ marginRight: '20px' }}>
+                  {' '}
+                  {/* Mengatur margin dengan inline style */}
                   <select
                     name="kategori_id_filter"
                     id="kategori_id_filter"
@@ -413,7 +414,6 @@ const BootstrapTable = () => {
                     onChange={handleChangeKategori}
                   >
                     <option value="">Semua Kategori</option>
-
                     {Array.isArray(kategori) &&
                       kategori.length &&
                       kategori.map((row, index) => (
@@ -427,6 +427,8 @@ const BootstrapTable = () => {
                   Add Multiple
                 </Button>
               </div>
+            </Card.Header>
+            <Card.Body>
               <SearchEntries showing={showing} handleShow={handleShow} searchTerm={searchTerm} handleSearch={handleSearch} />
               <Table responsive hover>
                 <thead>
@@ -752,4 +754,4 @@ const BootstrapTable = () => {
   );
 };
 
-export default BootstrapTable;
+export default Jenis;

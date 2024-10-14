@@ -44,6 +44,12 @@ const menuItems = {
               title: 'Jenis Soal',
               type: 'item',
               url: '/soal-jenis'
+            },
+            {
+              id: 'paket_soal',
+              title: 'Paket Soal',
+              type: 'item',
+              url: '/soal-paket'
             }
             // {
             //   id: 'collapse',
