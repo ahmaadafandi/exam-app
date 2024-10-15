@@ -12,6 +12,8 @@ import appConfig from 'config/appConfig';
 const Soal = () => {
   const navigate = useNavigate();
 
+  const [role, setRole] = useState(null);
+
   const [soalId, setSoalId] = useState('');
 
   const [rows, setSoal] = useState([]);
@@ -47,7 +49,7 @@ const Soal = () => {
       const response = await axios.get(`${appConfig.baseurlAPI}/soal/${id}/kunci-jawaban`);
       setKunciJawaban((prev) => ({
         ...prev,
-        [id]: response.data // Simpan kunci jawaban berdasarkan soal_id
+        [id]: Array.isArray(response.data) ? response.data : [] // Simpan kunci jawaban berdasarkan soal_id
       }));
     } catch (error) {
       console.error('Error fetching kunci jawaban:', error);
@@ -55,30 +57,47 @@ const Soal = () => {
   };
 
   useEffect(() => {
-    axios
-      .get(
-        `${appConfig.baseurlAPI}/soal?page=${currentPage}&per_page=${showing}&search=${searchTerm}&showing=${showing}&jenis_id=${selectedJenis}&paket_to_id=${selectedPaketTo}`
-      )
-      .then((data) => {
-        console.log(data.data);
-        setSoal(data.data.data.data);
-        setPaketTo(data.data.paket_to);
-        setJenis(data.data.jenis);
-        setTotalPages(data.data.data.last_page);
-        setTotalRows(data.data.data.total);
-        setIsLoading(false);
+    // Ambil role dari localStorage
+    const storedRole = localStorage.getItem('role');
+    setRole(storedRole);
 
-        // Ambil kunci jawaban untuk setiap soal
-        data.data.data.data.forEach((soal) => fetchKunciJawaban(soal.id));
-      })
-      .catch((error) => {
-        if (error.response.status === 403) {
-          navigate('/403');
-        } else {
-          console.log(error);
-        }
-        setIsLoading(false);
-      });
+    // Cek role dan navigasi jika perlu
+    if (storedRole !== 'administrator') {
+      navigate('/app/dashboard/default');
+      return; // Stop eksekusi lebih lanjut jika tidak memiliki akses
+    }
+
+    console.log(storedRole);
+
+    // Jika role adalah administrator, ambil data soal
+    const fetchSoalData = async () => {
+      const data = await axios
+        .get(
+          `${appConfig.baseurlAPI}/soal?page=${currentPage}&per_page=${showing}&search=${searchTerm}&showing=${showing}&jenis_id=${selectedJenis}&paket_to_id=${selectedPaketTo}`
+        )
+        .then((data) => {
+          console.log(data.data);
+          setSoal(data.data.data.data);
+          setPaketTo(data.data.paket_to);
+          setJenis(data.data.jenis);
+          setTotalPages(data.data.data.last_page);
+          setTotalRows(data.data.data.total);
+          setIsLoading(false);
+
+          // Ambil kunci jawaban untuk setiap soal
+          data.data.data.data.forEach((soal) => fetchKunciJawaban(soal.id));
+        })
+        .catch((error) => {
+          if (error.response.status === 403) {
+            navigate('/403');
+          } else {
+            console.log(error);
+          }
+          setIsLoading(false);
+        });
+    };
+
+    fetchSoalData();
   }, [currentPage, showing, searchTermDebounced, refetch]);
 
   /**
@@ -225,7 +244,7 @@ const Soal = () => {
 
   //   hapus kunci jawaban
 
-  const handleConfirmationDeleteKunciJawaban = (id) => {
+  const handleConfirmationDeleteKunciJawaban = (id, soalId) => {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -236,12 +255,12 @@ const Soal = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        handleDeleteKunciJawaban(id);
+        handleDeleteKunciJawaban(id, soalId);
       }
     });
   };
 
-  const handleDeleteKunciJawaban = (id) => {
+  const handleDeleteKunciJawaban = (id, soalId) => {
     axios
       .delete(`${appConfig.baseurlAPI}/soal/kunci-jawaban/${id}`)
       .then((data) => {
@@ -254,7 +273,6 @@ const Soal = () => {
           ...prev,
           [soalId]: updatedKunciJawaban
         }));
-
         MySwal.fire({
           title: 'Successfully!',
           html: 'Data deleted succesfully.',
@@ -434,10 +452,11 @@ const Soal = () => {
                                   {kunciJawaban[row.id].map((kunci, i) => (
                                     <button
                                       key={i}
-                                      className="btn btn-success p-1 mb-0"
-                                      onClick={() => handleConfirmationDeleteKunciJawaban(kunci.id)}
+                                      className="btn btn-success p-1 mb-0 position-relative"
+                                      onClick={() => handleConfirmationDeleteKunciJawaban(kunci.id, row.id)}
                                     >
                                       {kunci.jawaban} {'('} {kunci.nilai} {')'}{' '}
+                                      <i className="fas fa-times position-absolute end-0 me-1 icon-kunci-jawaban"></i>
                                     </button>
                                   ))}
                                 </p>
@@ -572,9 +591,12 @@ const Soal = () => {
                           value={input.jawaban}
                           className="form-control"
                           onChange={(e) => {
-                            const newInputs = [...inputs];
-                            newInputs[index].jawaban = e.target.value;
-                            setInputs(newInputs);
+                            const value = e.target.value.toUpperCase(); // Ubah ke huruf besar
+                            if (['A', 'B', 'C', 'D', 'E'].includes(value) || value === '') {
+                              const newInputs = [...inputs];
+                              newInputs[index].jawaban = value;
+                              setInputs(newInputs);
+                            }
                           }}
                         />
                       </td>
@@ -583,9 +605,12 @@ const Soal = () => {
                           value={input.nilai}
                           className="form-control"
                           onChange={(e) => {
-                            const newInputs = [...inputs];
-                            newInputs[index].nilai = e.target.value;
-                            setInputs(newInputs);
+                            const value = e.target.value;
+                            if (['1', '2', '3', '4', '5'].includes(value) || value === '') {
+                              const newInputs = [...inputs];
+                              newInputs[index].nilai = value;
+                              setInputs(newInputs);
+                            }
                           }}
                         />
                       </td>

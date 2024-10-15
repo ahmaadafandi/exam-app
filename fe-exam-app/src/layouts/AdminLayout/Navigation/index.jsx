@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import { ConfigContext } from '../../../contexts/ConfigContext';
 import useWindowSize from '../../../hooks/useWindowSize';
@@ -6,8 +6,17 @@ import useWindowSize from '../../../hooks/useWindowSize';
 import NavLogo from './NavLogo';
 import NavContent from './NavContent';
 import navigation from '../../../menu-items';
+import navigationAdmin from '../../../menu-admin-items';
 
 const Navigation = () => {
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    // Ambil role dari localStorage saat komponen dimuat
+    const storedRole = localStorage.getItem('role');
+    setRole(storedRole);
+  }, []);
+
   const configContext = useContext(ConfigContext);
   const { collapseMenu } = configContext.state;
   const windowSize = useWindowSize();
@@ -27,14 +36,14 @@ const Navigation = () => {
   let navContent = (
     <div className={navBarClass.join(' ')}>
       <NavLogo />
-      <NavContent navigation={navigation.items} />
+      <NavContent navigation={role === 'administrator' ? navigationAdmin.items : navigation.items} />
     </div>
   );
   if (windowSize.width < 992) {
     navContent = (
       <div className="navbar-wrapper">
         <NavLogo />
-        <NavContent navigation={navigation.items} />
+        <NavContent navigation={role === 'administrator' ? navigationAdmin.items : navigation.items} />
       </div>
     );
   }

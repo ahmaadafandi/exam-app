@@ -15,64 +15,64 @@ const menuItems = {
         }
       ]
     },
-    // {
-    //   id: 'konten-element',
-    //   title: 'KONTEN ELEMENT',
-    //   type: 'group',
-    //   icon: 'icon-ui',
-    //   children: [
-    //     {
-    //       id: 'data_soal',
-    //       title: 'Data Soal',
-    //       type: 'collapse',
-    //       icon: 'feather icon-box',
-    //       children: [
-    //         {
-    //           id: 'manage_soal',
-    //           title: 'Buat Soal',
-    //           type: 'item',
-    //           url: '/soal-manage'
-    //         },
-    //         {
-    //           id: 'soal',
-    //           title: 'Soal',
-    //           type: 'item',
-    //           url: '/soal'
-    //         },
-    //         {
-    //           id: 'jenis_soal',
-    //           title: 'Jenis Soal',
-    //           type: 'item',
-    //           url: '/soal-jenis'
-    //         },
-    //         {
-    //           id: 'paket_soal',
-    //           title: 'Paket Soal',
-    //           type: 'item',
-    //           url: '/soal-paket'
-    //         }
-    //         // {
-    //         //   id: 'collapse',
-    //         //   title: 'Collapse',
-    //         //   type: 'item',
-    //         //   url: '/basic/collapse'
-    //         // },
-    //         // {
-    //         //   id: 'tabs-pills',
-    //         //   title: 'Tabs & Pills',
-    //         //   type: 'item',
-    //         //   url: '/basic/tabs-pills'
-    //         // },
-    //         // {
-    //         //   id: 'typography',
-    //         //   title: 'Typography',
-    //         //   type: 'item',
-    //         //   url: '/basic/typography'
-    //         // }
-    //       ]
-    //     }
-    //   ]
-    // },
+    {
+      id: 'konten-element',
+      title: 'KONTEN ELEMENT',
+      type: 'group',
+      icon: 'icon-ui',
+      children: [
+        {
+          id: 'data_soal',
+          title: 'Data Soal',
+          type: 'collapse',
+          icon: 'feather icon-box',
+          children: [
+            {
+              id: 'manage_soal',
+              title: 'Buat Soal',
+              type: 'item',
+              url: '/soal-manage'
+            },
+            {
+              id: 'soal',
+              title: 'Soal',
+              type: 'item',
+              url: '/soal'
+            },
+            {
+              id: 'jenis_soal',
+              title: 'Jenis Soal',
+              type: 'item',
+              url: '/soal-jenis'
+            },
+            {
+              id: 'paket_soal',
+              title: 'Paket Soal',
+              type: 'item',
+              url: '/soal-paket'
+            }
+            // {
+            //   id: 'collapse',
+            //   title: 'Collapse',
+            //   type: 'item',
+            //   url: '/basic/collapse'
+            // },
+            // {
+            //   id: 'tabs-pills',
+            //   title: 'Tabs & Pills',
+            //   type: 'item',
+            //   url: '/basic/tabs-pills'
+            // },
+            // {
+            //   id: 'typography',
+            //   title: 'Typography',
+            //   type: 'item',
+            //   url: '/basic/typography'
+            // }
+          ]
+        }
+      ]
+    },
     {
       id: 'ui-manajement',
       title: 'DATA MANAJEMEN',
@@ -86,13 +86,13 @@ const menuItems = {
         //   icon: 'feather icon-file-text',
         //   url: '/forms/form-basic'
         // },
-        // {
-        //   id: 'data_user',
-        //   title: 'User',
-        //   type: 'item',
-        //   icon: 'feather icon-user',
-        //   url: '/data/user'
-        // },
+        {
+          id: 'data_user',
+          title: 'User',
+          type: 'item',
+          icon: 'feather icon-user',
+          url: '/data/user'
+        },
         {
           id: 'data',
           title: 'Data',

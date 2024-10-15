@@ -74,7 +74,11 @@ const JWTLogin = () => {
         })
         .then((response) => {
           if (response.status === 200) {
-            setTokenWithExpiration('token', response.data.token);
+            // Simpan token, user, dan role ke localStorage
+            const { token, user, role } = response.data;
+            setTokenWithExpiration('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('role', role);
             MySwal.fire({
               title: 'Success!',
               text: 'Login successfully',

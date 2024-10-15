@@ -3,6 +3,7 @@ import { ListGroup } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 
 import navigation from '../../../menu-items';
+import navigationAdmin from '../../../menu-admin-items';
 import { BASE_TITLE } from '../../../config/constant';
 
 const Breadcrumb = () => {
@@ -11,13 +12,28 @@ const Breadcrumb = () => {
   const [main, setMain] = useState([]);
   const [item, setItem] = useState([]);
 
+  const [role, setRole] = useState(null);
+
   useEffect(() => {
-    navigation.items.map((item, index) => {
-      if (item.type && item.type === 'group') {
-        getCollapse(item, index);
-      }
-      return false;
-    });
+    // Ambil role dari localStorage saat komponen dimuat
+    const storedRole = localStorage.getItem('role');
+    setRole(storedRole);
+
+    if (storedRole === 'administrator') {
+      navigationAdmin.items.map((item, index) => {
+        if (item.type && item.type === 'group') {
+          getCollapse(item, index);
+        }
+        return false;
+      });
+    } else {
+      navigation.items.map((item, index) => {
+        if (item.type && item.type === 'group') {
+          getCollapse(item, index);
+        }
+        return false;
+      });
+    }
   });
 
   const getCollapse = (item, index) => {

@@ -376,7 +376,7 @@ class SoalController extends Controller
 
     public function getKunciJawaban($soal_id)
     {
-        $kunciJawaban = KunciJawaban::where('soal_id', $soal_id)->get();
+        $kunciJawaban = KunciJawaban::where('soal_id', $soal_id)->orderBy('jawaban', 'ASC')->get();
         return response()->json($kunciJawaban);
     }
 

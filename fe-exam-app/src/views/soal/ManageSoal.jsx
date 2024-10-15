@@ -56,6 +56,15 @@ const ManageSoal = () => {
   });
 
   useEffect(() => {
+    // Ambil role dari localStorage
+    const storedRole = localStorage.getItem('role');
+
+    // Cek role dan navigasi jika perlu
+    if (storedRole !== 'administrator') {
+      navigate('/app/dashboard/default');
+      return; // Stop eksekusi lebih lanjut jika tidak memiliki akses
+    }
+
     axios
       .get(`${appConfig.baseurlAPI}/soal/create`)
       .then((data) => {

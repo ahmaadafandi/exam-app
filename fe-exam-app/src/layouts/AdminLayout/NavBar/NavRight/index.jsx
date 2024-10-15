@@ -16,7 +16,6 @@ import appConfig from 'config/appConfig';
 
 const NavRight = () => {
   const [user, setUser] = useState({});
-  const baseURL = 'http://127.0.0.1:8000/api';
   const [listOpen, setListOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,7 +32,7 @@ const NavRight = () => {
 
   const fetchData = async () => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    await axios.get(`${baseURL}/get/user`).then((response) => {
+    await axios.get(`${appConfig.baseurlAPI}/get/user`).then((response) => {
       setUser(response.data);
     });
   };
@@ -41,7 +40,7 @@ const NavRight = () => {
   const logoutHandler = async () => {
     setIsLoading(true);
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    await axios.post(`${baseURL}/logout`).then(() => {
+    await axios.post(`${appConfig.baseurlAPI}/logout`).then(() => {
       localStorage.removeItem('token');
       navigate('/');
     });

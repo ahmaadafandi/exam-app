@@ -661,3 +661,15 @@ textarea.form-control {
     transform: scale(1.1);
   }
 }
+
+// button kunci jawaban
+.icon-kunci-jawaban {
+  opacity: 0; // Sembunyikan ikon silang secara default
+  transition: opacity 0.3s ease; // Animasi transisi untuk opacity
+  pointer-events: none; // Mencegah interaksi dengan ikon
+
+  // Menambahkan nested selector untuk tombol saat dihover
+  .btn:hover & {
+    opacity: 1; // Tampilkan ikon silang saat tombol dihover
+  }
+}
