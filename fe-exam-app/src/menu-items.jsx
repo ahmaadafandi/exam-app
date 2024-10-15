@@ -94,6 +94,13 @@ const menuItems = {
         //   url: '/data/user'
         // },
         {
+          id: 'opsi-paket-pelanggan',
+          title: 'Paket',
+          type: 'item',
+          icon: 'feather icon-server',
+          url: '/pelanggan/paket'
+        },
+        {
           id: 'data',
           title: 'Data',
           type: 'item',

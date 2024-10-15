@@ -153,6 +153,14 @@ const routes = [
         element: lazy(() => import('./views/soal/Paket'))
       },
 
+      //   menu pelanggan
+      {
+        exact: 'true',
+        path: '/pelanggan/paket',
+        element: lazy(() => import('./views/pelanggan/Paket'))
+      },
+      //   akhir menu pelanggan
+
       //
       {
         path: '*',

@@ -673,3 +673,19 @@ textarea.form-control {
     opacity: 1; // Tampilkan ikon silang saat tombol dihover
   }
 }
+
+// corowsel
+.carousel {
+  &-control-prev,
+  &-control-next {
+    z-index: 1999; // Pastikan kontrol memiliki z-index yang cukup tinggi
+  }
+
+  &-indicators {
+    z-index: 1999; /* Indikator juga harus lebih tinggi */
+  }
+
+  &-caption {
+    z-index: 5; // Pastikan caption tetap di atas gambar
+  }
+}

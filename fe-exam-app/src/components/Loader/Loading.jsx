@@ -1,14 +1,14 @@
 const Loading = () => (
   <div className="loading">
-    <svg xmlns="http://www.w3.org/2000/svg" id="diamonds" class="" width="12em" height="6em" viewBox="0 0 128 64">
+    <svg xmlns="http://www.w3.org/2000/svg" id="diamonds" className="" width="12em" height="6em" viewBox="0 0 128 64">
       <polygon
-        class="diamond left"
+        className="diamond left"
         fill="none"
         stroke="#000"
-        stroke-width="6"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-dasharray="1000"
+        strokeWidth="6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray="1000"
         points="32,61 3,32 32,3 61,32"
       >
         <animate
@@ -22,13 +22,13 @@ const Loading = () => (
         />
       </polygon>
       <polygon
-        class="diamond right"
+        className="diamond right"
         fill="none"
         stroke="#000"
-        stroke-width="6"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-dasharray="1000"
+        strokeWidth="6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray="1000"
         points="90,61 61,32 90,3 119,32"
       >
         <animate
@@ -43,13 +43,13 @@ const Loading = () => (
         />
       </polygon>
       <polygon
-        class="diamond center"
+        className="diamond center"
         fill="none"
         stroke="#000"
-        stroke-width="6"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-dasharray="1000"
+        strokeWidth="6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray="1000"
         points="61,61 32,32 61,3 90,32"
       >
         <animate
@@ -65,7 +65,7 @@ const Loading = () => (
       </polygon>
     </svg>
 
-    <div class="message">Loading...</div>
+    <div className="message">Loading...</div>
   </div>
 );
 
