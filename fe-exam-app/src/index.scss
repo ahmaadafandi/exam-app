@@ -689,3 +689,196 @@ textarea.form-control {
     z-index: 5; // Pastikan caption tetap di atas gambar
   }
 }
+
+// ujian
+
+.timer-card {
+  background: linear-gradient(135deg, #6a11cb, #2575fc); /* Gradasi warna */
+  color: white; /* Warna teks */
+  border: none; /* Menghilangkan border default */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Bayangan */
+  padding: 0px; /* Padding yang lebih besar */
+}
+
+.timer {
+  font-size: 2rem; /* Ukuran font yang lebih besar */
+  font-weight: bold; /* Font tebal */
+  text-align: center; /* Memusatkan teks */
+  padding: 0px; /* Padding untuk teks */
+  background-color: rgba(255, 255, 255, 0.1); /* Latar belakang semi-transparan */
+  border-radius: 5px; /* Sudut membulat untuk timer */
+}
+
+.question-content {
+  h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .option {
+    position: relative;
+    padding: 15px 40px 15px 25px; // Menyediakan ruang untuk huruf
+    border-radius: 8px;
+    background-color: #f8f9fa; // Warna latar belakang opsi
+    margin-bottom: 10px;
+    transition:
+      background-color 0.3s,
+      box-shadow 0.3s;
+    cursor: pointer;
+
+    label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 16px;
+
+      input[type='radio'] {
+        position: absolute; // Menyembunyikan radio button asli
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .letter {
+        font-weight: bold;
+        font-size: 18px;
+        margin-right: 10px;
+      }
+    }
+
+    &.selected {
+      background-color: #007bff; // Warna latar belakang saat dipilih
+      color: white;
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+    }
+
+    &:hover {
+      background-color: #e2e6ea; // Warna saat hover
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between; // Menyebarkan tombol ke kiri dan kanan
+    margin-top: 20px;
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition:
+        background-color 0.3s,
+        transform 0.3s;
+    }
+
+    .btn-prev {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .btn-next {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .btn-submit {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+/* Sidebar */
+.sidebar {
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  max-height: 400px; // Tinggi maksimal sidebar
+  overflow-y: auto; // Menampilkan scroll jika konten melebihi tinggi maksimal
+
+  .sidebar-header {
+    margin-bottom: 20px;
+
+    h2 {
+      font-size: 1.5rem; // Ukuran font yang lebih besar untuk judul
+      color: #333; // Warna judul lebih gelap untuk kontras
+      font-weight: 700; // Bold untuk menarik perhatian
+    }
+  }
+
+  .question-numbers {
+    display: flex;
+    flex-direction: row; // Atur elemen agar teratur secara horizontal
+    flex-wrap: wrap; // Izinkan elemen untuk turun ke baris berikutnya jika lebar tidak mencukupi
+
+    .question-number {
+      width: 40px; // Ukuran tombol yang lebih besar untuk animasi lebih baik
+      height: 40px; // Ukuran tombol yang lebih besar
+      margin: 5px 2px;
+      background-color: white; // Latar belakang putih untuk soal yang belum dijawab
+      color: #333; // Warna teks yang lebih gelap
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px; // Radius sudut
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.1rem; // Ukuran font untuk meningkatkan keterbacaan
+      transition:
+        background-color 0.3s,
+        transform 0.3s,
+        color 0.3s; // Transisi yang lebih halus
+      border: 1px solid #ddd; // Garis batas untuk tombol
+
+      &:hover {
+        background-color: #f0f0f0; // Warna saat hover
+        transform: scale(1.1); // Efek pembesaran saat hover
+      }
+
+      .answer-label {
+        font-size: 0.8rem; // Ukuran lebih kecil untuk jawaban
+        position: absolute; // Posisi jawaban di atas nomor
+        top: 1; // Menempatkan di atas
+        right: 0; // Menempatkan di kanan
+        margin: 8px;
+        transform: translate(50%, -50%); // Memusatkan jawaban pada pojok kanan atas
+      }
+
+      &.answered {
+        background-color: #007bff; // Warna biru untuk soal yang sudah dijawab
+        color: white; // Warna teks menjadi putih
+        transform: translateY(-2px); // Efek angkat sedikit saat sudah dijawab
+      }
+
+      &.active {
+        background-color: #ff6216; // Warna untuk soal yang aktif
+        color: white; // Warna teks menjadi putih
+        transform: scale(1.1) rotate(2deg); // Efek sedikit berputar saat aktif
+      }
+
+      // Animasi ketika tombol muncul
+      & {
+        animation: fadeIn 0.3s ease-in-out; // Animasi muncul
+      }
+    }
+  }
+}
+
+// Animasi fade in untuk tombol
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px); // Muncul dari atas
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); // Posisi normal
+  }
+}

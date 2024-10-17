@@ -157,7 +157,19 @@ const routes = [
       {
         exact: 'true',
         path: '/pelanggan/paket',
-        element: lazy(() => import('./views/pelanggan/Paket'))
+        element: lazy(() => import('./views/pelanggan/paket/Paket'))
+      },
+
+      {
+        exact: 'true',
+        path: '/pelanggan/paket-manage/buka/:id',
+        element: lazy(() => import('./views/pelanggan/paket/ManagePaket'))
+      },
+
+      {
+        exact: 'true',
+        path: '/pelanggan/ujian/:id',
+        element: lazy(() => import('./views/pelanggan/ujian/Ujian'))
       },
       //   akhir menu pelanggan
 

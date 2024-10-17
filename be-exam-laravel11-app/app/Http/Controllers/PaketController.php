@@ -91,7 +91,23 @@ class PaketController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try 
+        {
+            $data   = PaketTo::findOrFail($id);
+
+            return response()->json([
+                'data'      => $data,
+                'success'   => true,
+            ], JsonResponse::HTTP_OK);
+        } 
+        catch (Exception $e) 
+        {
+            return response()->json([
+                'data'      => [],
+                'success'   => false,
+                'message'   => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
     }
 
     /**

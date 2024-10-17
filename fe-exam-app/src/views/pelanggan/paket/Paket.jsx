@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Loading from 'components/Loader/Loading';
 import appConfig from 'config/appConfig';
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Card } from 'react-bootstrap';
@@ -36,6 +35,10 @@ const BootstrapTable = () => {
         setLoading(false);
       });
   }, [currentPage, showing, searchTermDebounced, refetch, navigate]);
+
+  const handleOpen = (id) => {
+    navigate(`/pelanggan/paket-manage/buka/${id}`, { state: { id } });
+  };
 
   return (
     <React.Fragment>
@@ -111,7 +114,7 @@ const BootstrapTable = () => {
                         </div>
                       </div>
                     </div>
-                    <button className="btn btn-primary w-100" style={{ borderRadius: '8px' }}>
+                    <button className="btn btn-primary w-100" style={{ borderRadius: '8px' }} onClick={() => handleOpen(row.id)}>
                       Buka Paket
                     </button>
                   </Card.Body>
