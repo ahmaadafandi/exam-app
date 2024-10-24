@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\PaketTo;
+use App\Models\Soal;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class PaketController extends Controller
 {
@@ -164,6 +166,7 @@ class PaketController extends Controller
     {
         try 
         {
+            $data   = Soal::where('paket_to_id',$id)->delete();
             $data   = PaketTo::findOrFail($id)->delete();
 
             return response()->json([
@@ -209,6 +212,54 @@ class PaketController extends Controller
                 'data'      => [],
                 'success'   => false,
                 'message'   => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
+    }
+
+    public function getPerolehanNilaiUjianPaket($ujian_id)
+    {
+        try 
+        {
+            // Mengambil data perolehan nilai berdasarkan paket_id
+            $data = DB::table('kategoris as kt')
+                ->leftJoin('soals as s', 'kt.id', '=', 's.jenis_id')
+                ->leftJoin('jawabans as j', 's.id', '=', 'j.soal_id')
+                ->leftJoin('ujians as u', 'j.ujian_id', '=', 'u.id') // Menghubungkan jawaban dengan ujians
+                ->leftJoin('kunci_jawabans as kj', function ($join) {
+                    $join->on('s.id', '=', 'kj.soal_id')
+                        ->on('j.jawaban', '=', 'kj.jawaban');
+                })
+                ->where('u.id', $ujian_id)
+                ->select(
+                    'u.id as ujian_id',
+                    'kt.kategori',
+                    DB::raw('COALESCE(SUM(kj.nilai), 0) as total_nilai'),
+                    DB::raw('COUNT(s.id) as jumlah_soal')
+                )
+                ->groupBy('u.id', 'kt.id', 'kt.kategori')
+                ->get();
+
+            // Memeriksa apakah data ditemukan
+            if ($data->isEmpty()) {
+                return response()->json([
+                    'data' => [],
+                    'success' => true,
+                    'message' => 'No data found for this package.'
+                ], JsonResponse::HTTP_OK);
+            }
+
+            return response()->json([
+                'data' => $data,
+                'success' => true,
+            ], JsonResponse::HTTP_OK);
+        } 
+        catch (Exception $e) 
+        {
+            // Menangkap error dan memberikan pesan kesalahan yang lebih detail
+            return response()->json([
+                'data' => [],
+                'success' => false,
+                'message' => 'Error fetching data: ' . $e->getMessage()
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
         }
     }

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jawaban;
+use App\Models\Soal;
 use App\Models\Ujian;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UjianController extends Controller
 {
@@ -46,7 +48,9 @@ class UjianController extends Controller
 
             // Simpan jawaban
             foreach ($answers as $question => $answer) {
-                $questionNumber = substr($question, 1); // Mengambil nomor soal (misalnya dari 'q1' jadi '1')
+                // Mengambil nomor soal dengan menggunakan regex untuk menangkap angka
+                preg_match('/(\d+)/', $question, $matches);
+                $questionNumber = $matches[0]; // Nomor soal (misalnya dari 'idQ1' jadi '1')
                 Jawaban::create([
                     'ujian_id' => $exam->id,
                     'soal_id' => $questionNumber,
@@ -74,9 +78,26 @@ class UjianController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
-        //
+        try 
+        {
+            $jlh_soal = $request->get('jlh_soal');
+            $data   = Soal::where('paket_to_id', $id)->limit($jlh_soal)->get();
+
+            return response()->json([
+                'data'      => $data,
+                'success'   => true,
+            ], JsonResponse::HTTP_OK);
+        } 
+        catch (Exception $e)
+        {
+            return response()->json([
+                'data'      => [],
+                'success'   => false,
+                'message'   => $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
     }
 
     /**
@@ -101,5 +122,28 @@ class UjianController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function getUjianPaket($paket_id)
+    {
+        try 
+        {
+            // Mengambil data perolehan nilai berdasarkan paket_id
+            $data = Ujian::where('paket_to_id', $paket_id)->get();
+
+            return response()->json([
+                'data' => $data,
+                'success' => true,
+            ], JsonResponse::HTTP_OK);
+        } 
+        catch (Exception $e) 
+        {
+            // Menangkap error dan memberikan pesan kesalahan yang lebih detail
+            return response()->json([
+                'data' => [],
+                'success' => false,
+                'message' => 'Error fetching data: ' . $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
     }
 }

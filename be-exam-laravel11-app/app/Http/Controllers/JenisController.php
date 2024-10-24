@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Jenis;
 use App\Models\Kategori;
+use App\Models\Soal;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -172,6 +173,7 @@ class JenisController extends Controller
     {
         try 
         {
+            $data   = Soal::where('jenis_id',$id)->delete();
             $data   = Jenis::findOrFail($id)->delete();
 
             return response()->json([

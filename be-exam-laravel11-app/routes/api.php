@@ -34,8 +34,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     
     Route::resource('/paket', App\Http\Controllers\PaketController::class);
     Route::post('/paket/multiple-store', [App\Http\Controllers\PaketController::class, 'multipleStore']);
+    Route::get('/paket/perolehan/nilai/{ujian_id}', [App\Http\Controllers\PaketController::class, 'getPerolehanNilaiUjianPaket']);
 
     Route::resource('/ujian', App\Http\Controllers\UjianController::class);
+    Route::get('/ujian/paket/{paket_id}', [App\Http\Controllers\UjianController::class, 'getUjianPaket']);
 });
 
 Route::post('/soal/ckeditor/image', [App\Http\Controllers\SoalController::class, 'soalCkeditorImage']);

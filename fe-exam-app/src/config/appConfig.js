@@ -1,6 +1,7 @@
 const appConfig = {
   debounceTimeout: 750,
-  expirationTime: 60 * 60 * 1000, // set 1 hours
+  //   expirationTime: 60 * 60 * 1000, // set 1 hours
+  expirationTime: 5 * 60 * 60 * 1000, // set 5 hours
   baseURL: 'http://127.0.0.1:8000',
   baseurlAPI: 'http://127.0.0.1:8000/api'
 };

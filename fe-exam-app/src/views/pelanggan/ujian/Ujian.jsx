@@ -12,16 +12,42 @@ const ExamPage = () => {
   const configContext = useContext(ConfigContext); // Mengambil konteks dengan benar
   const { dispatch } = configContext; // Mengambil dispatch dari konteks
 
+  const { id } = useParams(); // Ambil id dari route parameter
+
   const navigate = useNavigate();
 
-  const totalQuestions = 10;
-  const initialAnswers = Array(totalQuestions).fill('');
+  const [totalQuestions, setTotalQuestions] = useState(10);
+  //   const initialAnswers = Array(totalQuestions).fill('');
   const [currentQuestion, setCurrentQuestion] = useState(1);
-  const [answers, setAnswers] = useState(initialAnswers);
+  const [answers, setAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(0);
+  const [soal, setSoal] = useState([]);
 
   const [isLoadingBtn, setIsLoadingBtn] = useState(false);
   const MySwal = withReactContent(Swal);
+
+  useEffect(() => {
+    const jlh_soal = parseInt(localStorage.getItem('jlh_soal'), 10);
+
+    axios
+      .get(`${appConfig.baseurlAPI}/ujian/${id}?jlh_soal=${jlh_soal}`)
+      .then((response) => {
+        const fetchedSoal = response.data.data;
+        setSoal(fetchedSoal);
+
+        // Inisialisasi answers dengan jawaban kosong sesuai jumlah soal
+        const initialAnswers = {};
+        fetchedSoal.forEach((question) => {
+          initialAnswers[`idQ${question.id}`] = ''; // Mengisi jawaban kosong untuk setiap soal
+        });
+        setAnswers(initialAnswers); // Set state answers dengan nilai awal kosong
+
+        console.log(response.data.data);
+      })
+      .catch((error) => {
+        console.error('There was an error fetching the post data!', error);
+      });
+  }, [id]);
 
   useEffect(() => {
     // Set collapseMenu to true when the component mounts
@@ -30,6 +56,7 @@ const ExamPage = () => {
     // Cek jika ada data tersimpan di localStorage
     const savedTime = localStorage.getItem('timeLeft');
     const savedAnswers = localStorage.getItem('answers');
+    setTotalQuestions(parseInt(localStorage.getItem('jlh_soal'), 10) || totalQuestions);
 
     // Jika ada, lanjutkan dari waktu tersimpan
     if (savedTime) {
@@ -55,7 +82,7 @@ const ExamPage = () => {
 
     // Bersihkan timer saat komponen unmount
     return () => clearInterval(timerInterval);
-  }, [dispatch]);
+  }, [dispatch, totalQuestions]);
 
   // Simpan jawaban setiap kali ada perubahan
   useEffect(() => {
@@ -80,16 +107,18 @@ const ExamPage = () => {
     }
   };
 
-  const handleAnswerChange = (questionIndex, answer) => {
-    const updatedAnswers = [...answers];
-    updatedAnswers[questionIndex] = answer.toUpperCase();
+  const handleAnswerChange = (questionId, answer) => {
+    const updatedAnswers = { ...answers };
+    // Format jawabannya menjadi idQ{questionId}
+    updatedAnswers[`idQ${questionId}`] = answer.toUpperCase();
+    // updatedAnswers[questionId] = answer.toUpperCase();
     setAnswers(updatedAnswers);
   };
 
   const submitExam = async () => {
     setIsLoadingBtn(true);
 
-    // Coba memuat jawaban terakhir dari localStorage jika state answers kosong
+    // Ambil jawaban terakhir dari localStorage jika state answers kosong
     const savedAnswers = JSON.parse(localStorage.getItem('answers')) || answers;
 
     // Siapkan data yang akan dikirim
@@ -111,57 +140,48 @@ const ExamPage = () => {
 
     const waktu_pengerjaan = `${hour}:${minutes}:${seconds}`;
 
-    formData.append('paket_to_id', paket_to_id); // Kirim package ID
-    formData.append('jlh_soal', jlh_soal); // Kirim jumlah soal
-    formData.append('waktu_pengerjaan', waktu_pengerjaan); // Kirim waktu yang dihabiskan
+    formData.append('paket_to_id', paket_to_id);
+    formData.append('jlh_soal', jlh_soal);
+    formData.append('waktu_pengerjaan', waktu_pengerjaan);
 
-    // Mengonversi jawaban ke dalam bentuk {q1: "A", q2: "B", ...}
-    const formattedAnswers = {};
-    savedAnswers.forEach((answer, index) => {
-      formattedAnswers[`q${index + 1}`] = answer; // Mengisi format { q1: "A", q2: "B", ... }
-    });
-
-    formData.append('answers', JSON.stringify(formattedAnswers)); // Kirim jawaban dalam bentuk JSON
+    // Mengonversi jawaban ke dalam bentuk {idQ1: "A", idQ2: "B", ...}
+    formData.append('answers', JSON.stringify(savedAnswers));
 
     // Panggil API untuk menyimpan data
-    await axios
-      .post(`${appConfig.baseurlAPI}/ujian`, formData, {
+    try {
+      const response = await axios.post(`${appConfig.baseurlAPI}/ujian`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
-      })
-      .then((response) => {
-        if (response.status === 201) {
-          Swal.fire({
-            title: 'Success!',
-            text: 'Data created successfully',
-            icon: 'success',
-            timer: 1500
-          }).then(() => {
-            setIsLoadingBtn(false);
-            // Redirect to selesai-ujian page
-            console.log('Jawaban Pengguna:', answers);
-            localStorage.removeItem('paket_to_id');
-            localStorage.removeItem('jlh_soal');
-            localStorage.removeItem('timeLeft');
-            localStorage.removeItem('answers');
-            dispatch({ type: actionType.COLLAPSE_MENU });
-            navigate('/selesai-ujian');
-          });
-        } else {
-          throw new Error('Network response was not ok');
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        MySwal.fire({
-          title: 'Oops...',
-          html: 'Something went wrong.',
-          icon: 'error',
-          timer: 2000
-        });
-        setIsLoadingBtn(false); // Set loading state ke false jika terjadi error
       });
+
+      if (response.status === 201) {
+        Swal.fire({
+          title: 'Success!',
+          text: 'Data created successfully',
+          icon: 'success',
+          timer: 1500
+        }).then(() => {
+          setIsLoadingBtn(false);
+          console.log('Jawaban Pengguna:', answers);
+          localStorage.removeItem('paket_to_id');
+          localStorage.removeItem('jlh_soal');
+          localStorage.removeItem('timeLeft');
+          localStorage.removeItem('answers');
+          dispatch({ type: actionType.COLLAPSE_MENU });
+          navigate('/selesai-ujian');
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      MySwal.fire({
+        title: 'Oops...',
+        html: 'Something went wrong.',
+        icon: 'error',
+        timer: 2000
+      });
+      setIsLoadingBtn(false);
+    }
   };
 
   const markAnsweredStatus = () => {
@@ -208,32 +228,26 @@ const ExamPage = () => {
           <Card.Body>
             <div className="question-content">
               <h2>Soal {currentQuestion}</h2>
-              <p>
-                <b>
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolor cumque, doloribus quos ut vel rerum molestiae quisquam, id
-                  facere esse architecto cum ipsum consequuntur quo incidunt? Autem dolorum amet quae, molestias fugiat animi voluptatum
-                  reiciendis.
-                </b>
-              </p>
+              <div dangerouslySetInnerHTML={{ __html: soal[currentQuestion - 1]?.soal }}></div>
               <div id={`question-${currentQuestion}`} className="question active">
                 <form>
-                  {['A', 'B', 'C', 'D', 'E'].map((option) => (
+                  {['A', 'B', 'C', 'D', 'E'].map((option, index) => (
                     <div
                       key={option}
-                      className={`option ${answers[currentQuestion - 1] === option ? 'selected' : ''}`}
-                      onClick={() => handleAnswerChange(currentQuestion - 1, option)} // Menangani klik di div
+                      className={`option ${answers[`idQ${soal[currentQuestion - 1]?.id}`] === option ? 'selected' : ''}`}
+                      onClick={() => handleAnswerChange(soal[currentQuestion - 1]?.id, option)} // Menangani klik di div
                     >
                       <label>
                         <input
                           type="radio"
                           name={`q${currentQuestion}`}
                           value={option}
-                          onChange={() => handleAnswerChange(currentQuestion - 1, option)} // Tetap menyertakan onChange untuk radio
-                          checked={answers[currentQuestion - 1] === option}
+                          onChange={() => handleAnswerChange(soal[currentQuestion - 1]?.id, option)} // Tetap menyertakan onChange untuk radio
+                          checked={answers[`idQ${soal[currentQuestion - 1]?.id}`] === option}
                           style={{ display: 'none' }} // Menyembunyikan radio button asli
                         />
                         <span className="letter">{option}</span> {/* Menampilkan huruf di sini */}
-                        Jawaban {option}
+                        {soal[currentQuestion - 1]?.[`pilihan${index + 1}`]}
                       </label>
                     </div>
                   ))}
@@ -305,23 +319,27 @@ const ExamPage = () => {
                 <h2>Navigasi Soal</h2>
               </div>
               <div className="question-numbers">
-                {Array.from({ length: totalQuestions }, (_, index) => (
-                  <button
-                    key={index}
-                    className={`question-number ${
-                      answers[index] ? 'answered' : 'unanswered' // Mengubah warna berdasarkan status jawaban
-                    } ${currentQuestion === index + 1 ? 'active' : ''}`}
-                    onClick={() => showQuestion(index + 1)}
-                  >
-                    {/* Menampilkan jawaban jika sudah diisi, jika tidak kosong */}
-                    {answers[index] ? (
-                      <div className="answer-label">{answers[index]}</div>
-                    ) : (
-                      <div className="answer-label"></div> // Tetap kosong jika belum diisi
-                    )}
-                    <div className="question-number-label">{index + 1}</div> {/* Nomor pertanyaan */}
-                  </button>
-                ))}
+                {Array.from({ length: totalQuestions }, (_, index) => {
+                  const questionId = soal[index]?.id; // Ambil id soal berdasarkan index, jika ada
+
+                  return (
+                    <button
+                      key={questionId || index} // Gunakan questionId sebagai key, atau index jika tidak ada
+                      className={`question-number ${
+                        questionId && answers[`idQ${questionId}`] ? 'answered' : 'unanswered' // Mengubah warna berdasarkan status jawaban
+                      } ${currentQuestion === index + 1 ? 'active' : ''}`}
+                      onClick={() => showQuestion(index + 1)}
+                    >
+                      {/* Menampilkan jawaban jika sudah diisi, jika tidak kosong */}
+                      {questionId && answers[`idQ${questionId}`] ? (
+                        <div className="answer-label">{answers[`idQ${questionId}`]}</div>
+                      ) : (
+                        <div className="answer-label"></div> // Tetap kosong jika belum diisi
+                      )}
+                      <div className="question-number-label">{index + 1}</div> {/* Nomor pertanyaan */}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </Card.Body>

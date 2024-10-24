@@ -142,6 +142,8 @@ const ManageSoal = () => {
     if (!formData.paket_to_id) {
       formIsValid = false;
       errors.paket_to_id = 'paket_to_id is required';
+
+      setIsLoadingBtn(false);
     }
 
     setFormErrors(errors);

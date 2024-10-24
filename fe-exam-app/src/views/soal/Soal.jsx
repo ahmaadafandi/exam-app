@@ -461,7 +461,7 @@ const Soal = () => {
                                   ))}
                                 </p>
                               ) : (
-                                <span>Loading...</span>
+                                <span></span>
                               )}
                               <button
                                 onClick={() => handleEditJawaban(row.id)}
