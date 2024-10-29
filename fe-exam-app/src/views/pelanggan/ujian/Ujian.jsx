@@ -22,37 +22,13 @@ const ExamPage = () => {
   const [answers, setAnswers] = useState({});
   const [timeLeft, setTimeLeft] = useState(0);
   const [soal, setSoal] = useState([]);
+  const [paket, setPaket] = useState('');
 
   const [isLoadingBtn, setIsLoadingBtn] = useState(false);
   const MySwal = withReactContent(Swal);
 
   useEffect(() => {
-    const jlh_soal = parseInt(localStorage.getItem('jlh_soal'), 10);
-
-    axios
-      .get(`${appConfig.baseurlAPI}/ujian/${id}?jlh_soal=${jlh_soal}`)
-      .then((response) => {
-        const fetchedSoal = response.data.data;
-        setSoal(fetchedSoal);
-
-        // Inisialisasi answers dengan jawaban kosong sesuai jumlah soal
-        const initialAnswers = {};
-        fetchedSoal.forEach((question) => {
-          initialAnswers[`idQ${question.id}`] = ''; // Mengisi jawaban kosong untuk setiap soal
-        });
-        setAnswers(initialAnswers); // Set state answers dengan nilai awal kosong
-
-        console.log(response.data.data);
-      })
-      .catch((error) => {
-        console.error('There was an error fetching the post data!', error);
-      });
-  }, [id]);
-
-  useEffect(() => {
-    // Set collapseMenu to true when the component mounts
-    dispatch({ type: actionType.COLLAPSE_MENU });
-
+    setPaket(localStorage.getItem('paket'));
     // Cek jika ada data tersimpan di localStorage
     const savedTime = localStorage.getItem('timeLeft');
     const savedAnswers = localStorage.getItem('answers');
@@ -82,12 +58,38 @@ const ExamPage = () => {
 
     // Bersihkan timer saat komponen unmount
     return () => clearInterval(timerInterval);
-  }, [dispatch, totalQuestions]);
+  }, [totalQuestions]);
 
   // Simpan jawaban setiap kali ada perubahan
   useEffect(() => {
     localStorage.setItem('answers', JSON.stringify(answers));
   }, [answers]);
+
+  useEffect(() => {
+    // Set collapseMenu to true when the component mounts
+    dispatch({ type: actionType.COLLAPSE_MENU });
+
+    const jlh_soal = parseInt(localStorage.getItem('jlh_soal'), 10);
+
+    axios
+      .get(`${appConfig.baseurlAPI}/ujian/${id}?jlh_soal=${jlh_soal}`)
+      .then((response) => {
+        const fetchedSoal = response.data.data;
+        setSoal(fetchedSoal);
+
+        // Inisialisasi answers dengan jawaban kosong sesuai jumlah soal
+        const initialAnswers = {};
+        fetchedSoal.forEach((question) => {
+          initialAnswers[`idQ${question.id}`] = ''; // Mengisi jawaban kosong untuk setiap soal
+        });
+        setAnswers(initialAnswers); // Set state answers dengan nilai awal kosong
+
+        console.log(response.data.data);
+      })
+      .catch((error) => {
+        console.error('There was an error fetching the post data!', error);
+      });
+  }, [dispatch, id]);
 
   const updateTimer = () => {
     let hour = Math.floor(timeLeft / (60 * 60));
@@ -168,6 +170,8 @@ const ExamPage = () => {
           localStorage.removeItem('jlh_soal');
           localStorage.removeItem('timeLeft');
           localStorage.removeItem('answers');
+          localStorage.removeItem('waktu');
+          localStorage.removeItem('paket');
           dispatch({ type: actionType.COLLAPSE_MENU });
           navigate('/selesai-ujian');
         });
@@ -200,25 +204,26 @@ const ExamPage = () => {
     }
   };
 
+  const handleKembali = () => {
+    dispatch({ type: actionType.COLLAPSE_MENU });
+
+    const paketId = localStorage.getItem('paket_to_id');
+
+    navigate(`/pelanggan/paket-manage/buka/${paketId}`, { state: { paketId } });
+    localStorage.removeItem('paket_to_id');
+    localStorage.removeItem('jlh_soal');
+    localStorage.removeItem('timeLeft');
+    localStorage.removeItem('answers');
+    localStorage.removeItem('waktu');
+    localStorage.removeItem('paket');
+  };
+
   return (
     <Row>
-      <Col className="col-md-9">
-        <Card className="mb-3">
-          <Card.Body style={{ fontWeight: 'bold' }}>
-            <div>
-              <h3>Tryout</h3>
-            </div>
-            <div>
-              <h4>Lorem ipsum dolor sit amet.</h4>
-            </div>
-          </Card.Body>
-        </Card>
-      </Col>
-      <Col className="col-md-3">
-        <Card className="mb-3 timer-card">
+      <Col className="col-md-12">
+        <Card className="card-custom mb-3">
           <Card.Body>
-            <b>Sisa Waktu</b>
-            <div className="timer">{updateTimer()}</div>
+            <div style={{ fontWeight: 'bold' }}>{paket}</div>
           </Card.Body>
         </Card>
       </Col>
@@ -312,6 +317,12 @@ const ExamPage = () => {
       </Col>
 
       <Col className="col-md-3 col-sm-12">
+        <Card className="mb-3 timer-card">
+          <Card.Body>
+            <b>Sisa Waktu</b>
+            <div className="timer">{updateTimer()}</div>
+          </Card.Body>
+        </Card>
         <Card>
           <Card.Body>
             <div className="sidebar">
@@ -344,6 +355,14 @@ const ExamPage = () => {
             </div>
           </Card.Body>
         </Card>
+        <div className="d-flex">
+          <button className="btn btn btn-danger w-50" onClick={() => handleKembali()}>
+            Batal Ujian
+          </button>
+          <button className="btn btn btn-success w-50" onClick={submitExam}>
+            Akhiri Ujian
+          </button>
+        </div>
       </Col>
     </Row>
   );

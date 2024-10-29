@@ -216,7 +216,7 @@ class PaketController extends Controller
         }
     }
 
-    public function getPerolehanNilaiUjianPaket($ujian_id)
+    public function getPerolehanNilaiUjianPaket(Request $request, $ujian_id)
     {
         try 
         {
@@ -230,6 +230,7 @@ class PaketController extends Controller
                         ->on('j.jawaban', '=', 'kj.jawaban');
                 })
                 ->where('u.id', $ujian_id)
+                ->where('u.user_id', $request->user()->id)
                 ->select(
                     'u.id as ujian_id',
                     'kt.kategori',

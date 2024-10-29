@@ -362,16 +362,15 @@ const Soal = () => {
       <Row>
         <Col>
           <Card>
-            <Card.Header>
-              <Card.Title as="h5">Data Soal</Card.Title>
-              <span className="d-block m-t-5">
-                use props <code>hover</code> with <code>Table</code> component
-              </span>
-            </Card.Header>
-            <Card.Body>
-              <div className="row">
-                <div className="col-md-4 form-group mb-3">
-                  <label>Paket Try Out</label>
+            <Card.Header className="d-flex justify-content-between flex-column flex-md-row">
+              <div className="mb-3 mb-md-0">
+                <Card.Title as="h5">Data Soal</Card.Title>
+                <span className="d-block m-t-5">
+                  Daftar <code>seluruh soal</code> pada <code>Database</code>
+                </span>
+              </div>
+              <div className="d-flex flex-column flex-md-row">
+                <div className="form-group mb-2 mb-md-0 me-md-3">
                   <select
                     name="paket_to_id"
                     id="paket_to_id"
@@ -390,8 +389,27 @@ const Soal = () => {
                       ))}
                   </select>
                 </div>
-                <div className="col-md-4 form-group mb-3">
-                  <label>Jenis</label>
+                <div className="form-group mb-2 mb-md-0 me-md-3">
+                  {' '}
+                  {/* Mengatur margin dengan inline style */}
+                  <select
+                    name="kategori_id_filter"
+                    id="kategori_id_filter"
+                    className={`form-control`}
+                    // value={selectedKategori}
+                    // onChange={handleChangeKategori}
+                  >
+                    <option value="">Semua Kategori</option>
+                    {/* {Array.isArray(kategori) &&
+                      kategori.length &&
+                      kategori.map((row, index) => (
+                        <option value={row.id} key={index}>
+                          {row.kategori}
+                        </option>
+                      ))} */}
+                  </select>
+                </div>
+                <div className="form-group">
                   <select name="jenis_id" id="jenis_id" className={`form-control`} value={selectedJenis} onChange={handleChangeJenis}>
                     <option value="">Semua Jenis</option>
 
@@ -405,7 +423,8 @@ const Soal = () => {
                   </select>
                 </div>
               </div>
-              <br />
+            </Card.Header>
+            <Card.Body>
               <SearchEntries showing={showing} handleShow={handleShow} searchTerm={searchTerm} handleSearch={handleSearch} />
               <Table responsive hover>
                 <thead>

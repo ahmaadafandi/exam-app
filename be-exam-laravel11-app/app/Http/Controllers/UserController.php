@@ -8,6 +8,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -220,5 +223,34 @@ class UserController extends Controller
                 'message'   => $e->getMessage()
             ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
         }
+    }
+
+    public function settingProfile(Request $request)
+    {
+        $request->validate([
+            'password_lama' => 'required',
+            'password_baru' => 'required|min:8',
+            'confirm_password' => 'required|same:password_baru',
+        ]);
+
+        $user = JWTAuth::user();
+
+        // Periksa apakah password lama cocok
+        if (!Hash::check($request->password_lama, $user->password)) {
+            throw ValidationException::withMessages([
+                'password_lama' => ['Password lama tidak cocok.'],
+            ]);
+        }
+
+        // Perbarui password pengguna
+        $user->password = Hash::make($request->password_baru);
+        $user->save();
+
+        return response()->json(['message' => 'Password berhasil diubah'], 201);
+        return response()->json([
+            'data'      => $user,
+            'success'   => true,
+            'message'   => 'Data deleted successfully'
+        ], JsonResponse::HTTP_OK);
     }
 }

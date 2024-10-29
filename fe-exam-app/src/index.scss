@@ -752,6 +752,12 @@ textarea.form-control {
       box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
     }
 
+    &.wrongSelected {
+      background-color: #f82424; // Warna latar belakang saat dipilih
+      color: white;
+      box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+    }
+
     &:hover {
       background-color: #e2e6ea; // Warna saat hover
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -857,6 +863,12 @@ textarea.form-control {
         transform: translateY(-2px); // Efek angkat sedikit saat sudah dijawab
       }
 
+      &.wrongAnswer {
+        background-color: #f82424; // Warna biru untuk soal yang sudah dijawab
+        color: white; // Warna teks menjadi putih
+        transform: translateY(-2px); // Efek angkat sedikit saat sudah dijawab
+      }
+
       &.active {
         background-color: #ff6216; // Warna untuk soal yang aktif
         color: white; // Warna teks menjadi putih
@@ -889,4 +901,31 @@ textarea.form-control {
   font-weight: bold;
   color: #007bff;
   margin: 10px 0;
+}
+
+// judul pada ujian.jsx
+.card-custom {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  background-color: #f9f9f9;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-body {
+    padding: 20px;
+    text-align: center;
+
+    div {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #333;
+    }
+  }
 }

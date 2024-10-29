@@ -411,7 +411,7 @@ const Jenis = () => {
                   use bootstrap <code>Table</code> component
                 </span>
               </div>
-              <div className="d-flex justify-content-between">
+              <div className="d-flex">
                 <div className="form-group" style={{ marginRight: '20px' }}>
                   {' '}
                   {/* Mengatur margin dengan inline style */}

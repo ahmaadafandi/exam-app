@@ -23,6 +23,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('/users', App\Http\Controllers\UserController::class);
+    Route::post('/user/setting/profile', [App\Http\Controllers\UserController::class, 'settingProfile']);
 
     Route::resource('/soal', App\Http\Controllers\SoalController::class);
     Route::post('/soal/jawaban/multiple-store', [App\Http\Controllers\SoalController::class, 'multipleStore']);
@@ -38,6 +39,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::resource('/ujian', App\Http\Controllers\UjianController::class);
     Route::get('/ujian/paket/{paket_id}', [App\Http\Controllers\UjianController::class, 'getUjianPaket']);
+    Route::get('/ujian/pembahasan/{ujian_id}', [App\Http\Controllers\UjianController::class, 'getUjianPembahasan']);
 });
 
 Route::post('/soal/ckeditor/image', [App\Http\Controllers\SoalController::class, 'soalCkeditorImage']);

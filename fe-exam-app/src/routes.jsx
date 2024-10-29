@@ -125,6 +125,12 @@ const routes = [
 
       {
         exact: 'true',
+        path: '/data/user/setting',
+        element: lazy(() => import('./views/user/Setting'))
+      },
+
+      {
+        exact: 'true',
         path: '/soal',
         element: lazy(() => import('./views/soal/Soal'))
       },
@@ -170,6 +176,12 @@ const routes = [
         exact: 'true',
         path: '/pelanggan/ujian/:id',
         element: lazy(() => import('./views/pelanggan/ujian/Ujian'))
+      },
+
+      {
+        exact: 'true',
+        path: '/pelanggan/ujian/pembahasan/:id',
+        element: lazy(() => import('./views/pelanggan/pembahasan/Pembahasan'))
       },
       //   akhir menu pelanggan
 

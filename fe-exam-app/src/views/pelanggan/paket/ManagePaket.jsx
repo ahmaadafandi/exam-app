@@ -93,10 +93,18 @@ const BootstrapTable = () => {
     }
 
     localStorage.setItem('paket_to_id', paket.id);
+    localStorage.setItem('paket', paket.paket);
     localStorage.setItem('jlh_soal', paket.jlh_soal);
     localStorage.setItem('waktu', paket.waktu * 60);
 
     navigate(`/pelanggan/ujian/${id}`, { state: { id } });
+  };
+
+  const handlePembahasan = (id) => {
+    localStorage.setItem('paket_to_id', paket.id);
+    localStorage.setItem('paket', paket.paket);
+
+    navigate(`/pelanggan/ujian/pembahasan/${id}`, { state: { id } });
   };
 
   return (
@@ -194,7 +202,7 @@ const BootstrapTable = () => {
           `}</style>
 
           <Col sm={12} className="accordion">
-            <h5>Accordion Example</h5>
+            <h5>Riwayat Ujian</h5>
             <hr />
             {!isLoading ? (
               Array.isArray(dataUjian) && dataUjian.length ? (
@@ -289,8 +297,12 @@ const BootstrapTable = () => {
                                   <h5>Perolehan Nilai</h5>
                                   <p className="nilai">{calculateTotalNilai(row.id)}</p>
                                   <div className="button-group d-flex justify-content-center">
-                                    <button className="btn btn-success">Detail</button>
-                                    <button className="btn btn btn-primary">Pembahasan</button>
+                                    <button className="btn btn-success" onClick={() => handlePembahasan(row.id)}>
+                                      Detail
+                                    </button>
+                                    <button className="btn btn btn-primary" onClick={() => handlePembahasan(row.id)}>
+                                      Pembahasan
+                                    </button>
                                   </div>
                                 </Card.Body>
                               </Card>

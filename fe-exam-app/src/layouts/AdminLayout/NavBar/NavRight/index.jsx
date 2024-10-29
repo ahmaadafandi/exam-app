@@ -41,7 +41,8 @@ const NavRight = () => {
     setIsLoading(true);
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     await axios.post(`${appConfig.baseurlAPI}/logout`).then(() => {
-      localStorage.removeItem('token');
+      //   localStorage.removeItem('token');
+      localStorage.clear();
       navigate('/');
     });
   };
@@ -201,12 +202,12 @@ const NavRight = () => {
               </div>
               <ListGroup as="ul" bsPrefix=" " variant="flush" className="pro-body">
                 <ListGroup.Item as="li" bsPrefix=" ">
-                  <Link to="#" className="dropdown-item">
+                  <Link to="/data/user/setting" className="dropdown-item">
                     <i className="feather icon-settings" /> Settings
                   </Link>
                 </ListGroup.Item>
                 <ListGroup.Item as="li" bsPrefix=" ">
-                  <Link to="#" className="dropdown-item">
+                  <Link to="/data/user/setting" className="dropdown-item">
                     <i className="feather icon-user" /> Profile
                   </Link>
                 </ListGroup.Item>

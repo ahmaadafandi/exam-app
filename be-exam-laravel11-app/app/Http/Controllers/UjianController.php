@@ -124,12 +124,35 @@ class UjianController extends Controller
         //
     }
 
-    public function getUjianPaket($paket_id)
+    public function getUjianPaket(Request $request, $paket_id)
     {
         try 
         {
             // Mengambil data perolehan nilai berdasarkan paket_id
-            $data = Ujian::where('paket_to_id', $paket_id)->get();
+            $data = Ujian::where('paket_to_id', $paket_id)->where('user_id', $request->user()->id)->get();
+
+            return response()->json([
+                'data' => $data,
+                'success' => true,
+            ], JsonResponse::HTTP_OK);
+        } 
+        catch (Exception $e) 
+        {
+            // Menangkap error dan memberikan pesan kesalahan yang lebih detail
+            return response()->json([
+                'data' => [],
+                'success' => false,
+                'message' => 'Error fetching data: ' . $e->getMessage()
+            ], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);    
+        }
+    }
+
+    public function getUjianPembahasan($ujian_id)
+    {
+        try 
+        {
+            // Mengambil data perolehan nilai berdasarkan paket_id
+            $data = Jawaban::join('soals', 'soals.id', 'jawabans.soal_id')->join('ujians', 'ujians.id', 'jawabans.ujian_id')->join('kunci_jawabans', 'kunci_jawabans.soal_id', 'soals.id')->where('jawabans.ujian_id', $ujian_id)->get(['soals.id AS soal_id', 'soals.soal', 'soals.pilihan1', 'soals.pilihan2', 'soals.pilihan3', 'soals.pilihan4', 'soals.pilihan5', 'ujians.jlh_soal' , 'jawabans.*', 'kunci_jawabans.jawaban AS kunci_jawaban']);
 
             return response()->json([
                 'data' => $data,
