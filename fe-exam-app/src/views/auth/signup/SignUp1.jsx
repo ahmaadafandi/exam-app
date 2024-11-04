@@ -62,6 +62,10 @@ const SignUp1 = () => {
       errors.password_confirmation = 'Confirmation Password is required';
     }
 
+    if (formIsValid == false) {
+      setIsLoading(false);
+    }
+
     setFormErrors(errors);
     return formIsValid;
   };
@@ -69,6 +73,11 @@ const SignUp1 = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
+
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: ''
+    }));
   };
 
   const registerHandler = (e) => {
@@ -135,58 +144,62 @@ const SignUp1 = () => {
                   <div className="mb-4">
                     <i className="feather icon-user-plus auth-icon" />
                   </div>
-                  <h3 className="mb-4">Sign up</h3>
+                  <p className="mb-4 fs-5 fw-bold">Sign up</p>
                   <form onSubmit={registerHandler}>
-                    <div className="input-group mb-3">
+                    <div className="form-group mb-3">
                       <input
                         type="text"
-                        className="form-control"
+                        className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
                         placeholder="Name"
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
                         error={formErrors.name}
                       />
+                      {formErrors.name && <div className="invalid-feedback">{formErrors.name}</div>}
                     </div>
-                    <div className="input-group mb-3">
+                    <div className="form-group mb-3">
                       <input
                         type="email"
-                        className="form-control"
+                        className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
                         placeholder="Email address"
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
                         error={formErrors.email}
                       />
+                      {formErrors.email && <div className="invalid-feedback">{formErrors.email}</div>}
                     </div>
-                    <div className="input-group mb-4">
+                    <div className="form-group mb-4">
                       <input
                         type="password"
-                        className="form-control"
+                        className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
                         placeholder="Password"
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
                         error={formErrors.password}
                       />
+                      {formErrors.password && <div className="invalid-feedback">{formErrors.password}</div>}
                     </div>
-                    <div className="input-group mb-4">
+                    <div className="form-group mb-4">
                       <input
                         type="password"
-                        className="form-control"
+                        className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
                         placeholder="Confirmation Password"
                         name="password_confirmation"
                         value={formData.password_confirmation}
                         onChange={handleInputChange}
                         error={formErrors.password_confirmation}
                       />
+                      {formErrors.password_confirmation && <div className="invalid-feedback">{formErrors.password_confirmation}</div>}
                     </div>
-                    <div className="form-check  text-start mb-4 mt-2">
+                    {/* <div className="form-check  text-start mb-4 mt-2">
                       <input type="checkbox" className="form-check-input" id="customCheck1" defaultChecked={false} />
                       <label className="form-check-label" htmlFor="customCheck1">
                         Send me the <Link to="#"> Newsletter</Link> weekly.
                       </label>
-                    </div>
+                    </div> */}
                     <button className="btn btn-primary mb-4">
                       {!isLoading ? (
                         'Register'

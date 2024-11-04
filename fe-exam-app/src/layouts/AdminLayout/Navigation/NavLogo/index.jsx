@@ -41,7 +41,9 @@ const NavLogo = () => {
             <i className="feather icon-trending-up" />
             {/* <img src={appConfig.baseURL + '/storage/images/' + user.avatar} className="img-radius" alt="User Profile" width={50} /> */}
           </div>
-          <span className="b-title">Exam App</span>
+          <span className="b-title">
+            Exam App <sup>V 1.0</sup>
+          </span>
           {/* <span className="b-title">{user.name}</span> */}
         </Link>
         <Link to="#" className={toggleClass.join(' ')} id="mobile-collapse" onClick={() => dispatch({ type: actionType.COLLAPSE_MENU })}>

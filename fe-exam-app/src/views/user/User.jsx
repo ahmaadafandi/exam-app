@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { Row, Col, Card, Table, Modal, Button } from 'react-bootstrap';
 import appConfig from 'config/appConfig';
 import InputValidation from 'components/Form/InputValidation';
+import { getBackgroundColor } from 'config/colorUtils';
 // import ModalFooter from 'components/Form/ModalFooter';
 // import ModalHeader from 'components/Form/ModalHeader';
 
@@ -102,7 +103,21 @@ const User = () => {
     // Validate input name
     if (!formData.name) {
       formIsValid = false;
-      errors.name_gallery = 'Name is required';
+      errors.name = 'name is required';
+    }
+
+    if (!formData.email) {
+      formIsValid = false;
+      errors.email = 'email is required';
+    }
+
+    if (!formData.role) {
+      formIsValid = false;
+      errors.role = 'role is required';
+    }
+
+    if (formIsValid == false) {
+      setIsLoadingBtn(false);
     }
 
     setFormErrors(errors);
@@ -180,6 +195,11 @@ const User = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
+
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: ''
+    }));
   };
 
   const handleFileChange = (event) => {
@@ -351,14 +371,36 @@ const User = () => {
                         <tr key={index}>
                           <td className="text-center">{index + 1}</td>
                           <td>
-                            <a href={appConfig.baseURL + '/storage/images/' + row.avatar} target="_blank" rel="noopener noreferrer">
-                              <img
-                                className="tw-aspect-square tw-w-4/6 tw-rounded-lg"
-                                src={appConfig.baseURL + '/storage/images/' + row.avatar}
-                                alt={row.name}
-                                width="50"
-                              />
-                            </a>
+                            {row.avatar ? (
+                              <a
+                                href={
+                                  row.avatar
+                                    ? appConfig.baseURL + '/storage/images/' + row.avatar
+                                    : appConfig.baseURL + '/storage/images/user_icon.png'
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <img
+                                  className="settings-icon"
+                                  src={
+                                    row.avatar
+                                      ? appConfig.baseURL + '/storage/images/' + row.avatar
+                                      : appConfig.baseURL + '/storage/images/user_icon.png'
+                                  }
+                                  alt={row.name}
+                                />
+                              </a>
+                            ) : (
+                              <div
+                                className="user-icon"
+                                style={{
+                                  backgroundColor: getBackgroundColor(row.name)
+                                }}
+                              >
+                                {row.name.charAt(0).toUpperCase()}
+                              </div>
+                            )}
                           </td>
                           <td>{row.name}</td>
                           <td>{row.email}</td>
@@ -461,28 +503,32 @@ const User = () => {
               label="Name"
               name="name"
               type="text"
+              className={`form-control ${formErrors.name ? 'is-invalid' : ''}`}
               value={formData.name}
               onChange={handleInputChange}
               error={formErrors.name}
             />
+            {formErrors.name && <div className="invalid-feedback">{formErrors.name}</div>}
             <InputValidation
               label="Email"
               name="email"
               type="email"
+              className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
               value={formData.email}
               onChange={handleInputChange}
               error={formErrors.email}
             />
-
+            {formErrors.email && <div className="invalid-feedback">{formErrors.email}</div>}
             <InputValidation
               label="Password"
               name="password"
               type="password"
+              className={`form-control ${formErrors.password ? 'is-invalid' : ''}`}
               value={formData.password || ''}
               onChange={handleInputChange}
               error={formErrors.password}
             />
-
+            {formErrors.password && <div className="invalid-feedback">{formErrors.password}</div>}
             <div className="form-group">
               <label htmlFor="role">Role user</label>
               <select

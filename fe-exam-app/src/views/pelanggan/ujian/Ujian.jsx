@@ -117,6 +117,22 @@ const ExamPage = () => {
     setAnswers(updatedAnswers);
   };
 
+  const handleConfirmationAkhiriUjian = () => {
+    Swal.fire({
+      title: 'Apakah anda yakin?',
+      text: 'Ujian akan diakhiri!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, Akhiri Ujian'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        submitExam();
+      }
+    });
+  };
+
   const submitExam = async () => {
     setIsLoadingBtn(true);
 
@@ -205,17 +221,29 @@ const ExamPage = () => {
   };
 
   const handleKembali = () => {
-    dispatch({ type: actionType.COLLAPSE_MENU });
+    Swal.fire({
+      title: 'Apakah anda yakin?',
+      text: 'Ujian akan dibatalkan!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, Batalkan Ujian!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch({ type: actionType.COLLAPSE_MENU });
 
-    const paketId = localStorage.getItem('paket_to_id');
+        const paketId = localStorage.getItem('paket_to_id');
 
-    navigate(`/pelanggan/paket-manage/buka/${paketId}`, { state: { paketId } });
-    localStorage.removeItem('paket_to_id');
-    localStorage.removeItem('jlh_soal');
-    localStorage.removeItem('timeLeft');
-    localStorage.removeItem('answers');
-    localStorage.removeItem('waktu');
-    localStorage.removeItem('paket');
+        navigate(`/pelanggan/paket-manage/buka/${paketId}`, { state: { paketId } });
+        localStorage.removeItem('paket_to_id');
+        localStorage.removeItem('jlh_soal');
+        localStorage.removeItem('timeLeft');
+        localStorage.removeItem('answers');
+        localStorage.removeItem('waktu');
+        localStorage.removeItem('paket');
+      }
+    });
   };
 
   return (
@@ -233,8 +261,8 @@ const ExamPage = () => {
           <Card.Body>
             <div className="question-content">
               <h2>Soal {currentQuestion}</h2>
-              <div dangerouslySetInnerHTML={{ __html: soal[currentQuestion - 1]?.soal }}></div>
-              <div id={`question-${currentQuestion}`} className="question active">
+              <div dangerouslySetInnerHTML={{ __html: soal[currentQuestion - 1]?.soal }} style={{ color: 'black' }}></div>
+              <div id={`question-${currentQuestion}`} className="question active" style={{ color: 'black' }}>
                 <form>
                   {['A', 'B', 'C', 'D', 'E'].map((option, index) => (
                     <div
@@ -359,7 +387,7 @@ const ExamPage = () => {
           <button className="btn btn btn-danger w-50" onClick={() => handleKembali()}>
             Batal Ujian
           </button>
-          <button className="btn btn btn-success w-50" onClick={submitExam}>
+          <button className="btn btn btn-success w-50" onClick={handleConfirmationAkhiriUjian}>
             Akhiri Ujian
           </button>
         </div>

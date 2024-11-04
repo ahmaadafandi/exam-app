@@ -99,8 +99,8 @@ const ExamPage = () => {
           <Card.Body>
             <div className="question-content">
               <h2>Soal {currentQuestion}</h2>
-              <div dangerouslySetInnerHTML={{ __html: soal[currentQuestion - 1]?.soal }}></div>
-              <div id={`question-${currentQuestion}`} className="question active">
+              <div dangerouslySetInnerHTML={{ __html: soal[currentQuestion - 1]?.soal }} style={{ color: 'black' }}></div>
+              <div id={`question-${currentQuestion}`} className="question active" style={{ color: 'black' }}>
                 <form>
                   {['A', 'B', 'C', 'D', 'E'].map((option, index) => {
                     const questionId = soal[currentQuestion - 1]?.soal_id; // Ambil id soal berdasarkan index, jika ada
@@ -111,7 +111,7 @@ const ExamPage = () => {
                     let optionClass = '';
 
                     if (option === correctAnswer) {
-                      optionClass = 'selected'; // Warna biru untuk pilihan yang benar
+                      optionClass = 'selectedTrue'; // Warna biru untuk pilihan yang benar
                     }
 
                     if (option === userAnswer && option !== correctAnswer) {
@@ -183,7 +183,7 @@ const ExamPage = () => {
                   const buttonClass = !userAnswer
                     ? 'unanswered' // Warna putih jika belum dijawab
                     : userAnswer === correctAnswer
-                      ? 'answered' // Warna biru jika jawaban benar
+                      ? 'answeredTrue' // Warna biru jika jawaban benar
                       : 'wrongAnswer'; // Warna merah jika jawaban salah
 
                   return (

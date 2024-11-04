@@ -105,6 +105,20 @@ const Jenis = () => {
       errors.paket = 'Paket is required';
     }
 
+    if (!formData.jlh_soal) {
+      formIsValid = false;
+      errors.jlh_soal = 'jlh soal is required';
+    }
+
+    if (!formData.waktu) {
+      formIsValid = false;
+      errors.waktu = 'waktu is required';
+    }
+
+    if (formIsValid == false) {
+      setIsLoadingBtn(false);
+    }
+
     setFormErrors(errors);
     return formIsValid;
   };
@@ -175,6 +189,11 @@ const Jenis = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
+
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: ''
+    }));
   };
 
   const handleSubmit = (event) => {
@@ -336,6 +355,41 @@ const Jenis = () => {
   const handleSubmitMultiple = (event) => {
     event.preventDefault();
     setIsLoadingBtn(true);
+
+    // Validasi form multiple insert
+    let valid = true;
+    const newInputs = inputs.map((input) => {
+      const errors = {};
+
+      if (!input.paket) {
+        errors.paket = 'paket is required';
+        valid = false;
+      }
+
+      if (!input.jlh_soal) {
+        errors.jlh_soal = 'jlh_soal is required';
+        valid = false;
+      }
+
+      if (!input.waktu) {
+        errors.waktu = 'waktu is required';
+        valid = false;
+      }
+
+      return { ...input, errors };
+    });
+
+    // Jika ada error, tampilkan pesan dan hentikan submit
+    if (!valid) {
+      setInputs(newInputs);
+      setIsLoadingBtn(false);
+      Swal.fire({
+        title: 'Oops...',
+        text: 'Please complete all required fields before submitting.',
+        icon: 'error'
+      });
+      return;
+    }
 
     axios
       .post(

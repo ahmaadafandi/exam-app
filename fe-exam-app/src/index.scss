@@ -752,6 +752,12 @@ textarea.form-control {
       box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
     }
 
+    &.selectedTrue {
+      background-color: #1de9b6; // Warna biru untuk soal yang sudah dijawab
+      color: white; // Warna teks menjadi putih
+      transform: translateY(-2px); // Efek angkat sedikit saat sudah dijawab
+    }
+
     &.wrongSelected {
       background-color: #f82424; // Warna latar belakang saat dipilih
       color: white;
@@ -863,6 +869,12 @@ textarea.form-control {
         transform: translateY(-2px); // Efek angkat sedikit saat sudah dijawab
       }
 
+      &.answeredTrue {
+        background-color: #1de9b6; // Warna biru untuk soal yang sudah dijawab
+        color: white; // Warna teks menjadi putih
+        transform: translateY(-2px); // Efek angkat sedikit saat sudah dijawab
+      }
+
       &.wrongAnswer {
         background-color: #f82424; // Warna biru untuk soal yang sudah dijawab
         color: white; // Warna teks menjadi putih
@@ -927,5 +939,25 @@ textarea.form-control {
       font-weight: bold;
       color: #333;
     }
+  }
+}
+
+// icon user
+.user-icon {
+  width: 40px; /* Ukuran lebar lingkaran */
+  height: 40px; /* Ukuran tinggi lingkaran */
+  border-radius: 50%; /* Membuat background bulat */
+  color: #fff; /* Warna teks (inisial nama) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px; /* Ukuran font untuk inisial */
+  font-weight: bold;
+  text-transform: uppercase; /* Mengubah huruf menjadi kapital */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
   }
 }

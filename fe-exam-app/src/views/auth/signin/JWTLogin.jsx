@@ -53,6 +53,10 @@ const JWTLogin = () => {
       errors.password = 'Password is required';
     }
 
+    if (formIsValid == false) {
+      setIsLoading(false);
+    }
+
     setFormErrors(errors);
     return formIsValid;
   };
@@ -60,6 +64,11 @@ const JWTLogin = () => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
+
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: ''
+    }));
   };
 
   const loginHandler = (e) => {
@@ -116,10 +125,10 @@ const JWTLogin = () => {
       })}
     >
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-        <form noValidate onSubmit={loginHandler}>
+        <form onSubmit={loginHandler}>
           <div className="form-group mb-3">
             <input
-              className="form-control"
+              className={`form-control ${formErrors.email ? 'is-invalid' : ''}`}
               label="Email Address"
               name="email"
               //   onBlur={handleBlur}
@@ -127,12 +136,13 @@ const JWTLogin = () => {
               type="email"
               value={formData.email}
               error={formErrors.email}
+              placeholder="Email"
             />
-            {touched.email && errors.email && <small className="text-danger form-text">{errors.email}</small>}
+            {formErrors.email && <div className="invalid-feedback">{formErrors.email}</div>}
           </div>
           <div className="form-group mb-4">
             <input
-              className="form-control"
+              className={`form-control ${formErrors.password ? 'is-invalid' : ''}`}
               label="Password"
               name="password"
               //   onBlur={handleBlur}
@@ -140,8 +150,9 @@ const JWTLogin = () => {
               type="password"
               value={formData.password}
               error={formErrors.password}
+              placeholder="Password"
             />
-            {touched.password && errors.password && <small className="text-danger form-text">{errors.password}</small>}
+            {formErrors.password && <div className="invalid-feedback">{formErrors.password}</div>}
           </div>
 
           <div className="custom-control custom-checkbox  text-start mb-4 mt-2">

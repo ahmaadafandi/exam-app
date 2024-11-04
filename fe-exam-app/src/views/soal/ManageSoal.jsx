@@ -113,10 +113,14 @@ const ManageSoal = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    console.log(`Input ${name} changed to ${value}`); // Debug log
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value
+    }));
+
+    setFormErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: ''
     }));
   };
 
@@ -141,8 +145,45 @@ const ManageSoal = () => {
 
     if (!formData.paket_to_id) {
       formIsValid = false;
-      errors.paket_to_id = 'paket_to_id is required';
+      errors.paket_to_id = 'Paket TO is required';
+    }
 
+    if (!formData.jenis_id) {
+      formIsValid = false;
+      errors.jenis_id = 'Jenis is required';
+    }
+
+    if (!formData.pilihan1) {
+      formIsValid = false;
+      errors.pilihan1 = 'Pilihan 1 is required';
+    }
+
+    if (!formData.pilihan2) {
+      formIsValid = false;
+      errors.pilihan2 = 'Pilihan 2 is required';
+    }
+
+    if (!formData.pilihan3) {
+      formIsValid = false;
+      errors.pilihan3 = 'Pilihan 3 is required';
+    }
+
+    if (!formData.pilihan4) {
+      formIsValid = false;
+      errors.pilihan4 = 'Pilihan 4 is required';
+    }
+
+    if (!formData.pilihan5) {
+      formIsValid = false;
+      errors.pilihan5 = 'Pilihan 5 is required';
+    }
+
+    if (!formData.soal) {
+      formIsValid = false;
+      errors.soal = 'Soal is required';
+    }
+
+    if (formIsValid == false) {
       setIsLoadingBtn(false);
     }
 

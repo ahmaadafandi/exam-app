@@ -13,9 +13,10 @@ import avatar2 from '../../../../assets/images/user/avatar-2.jpg';
 import avatar3 from '../../../../assets/images/user/avatar-3.jpg';
 import avatar4 from '../../../../assets/images/user/avatar-4.jpg';
 import appConfig from 'config/appConfig';
+import { getBackgroundColor } from 'config/colorUtils';
 
 const NavRight = () => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({ name: '' });
   const [listOpen, setListOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -151,14 +152,50 @@ const NavRight = () => {
         </ListGroup.Item> */}
         <ListGroup.Item as="li" bsPrefix=" ">
           <Dropdown align={'end'} className="drp-user">
-            <Dropdown.Toggle as={Link} variant="link" to="#" id="dropdown-basic">
+            <Dropdown.Toggle as={Link} variant="link" to="#" id="dropdown-basic" className="d-flex align-items-center">
               {/* <i className="icon feather icon-settings" /> */}
-              <span style={{ fontSize: '18px', marginRight: '10px' }}>{user.name}</span>
-              <img src={appConfig.baseURL + '/storage/images/' + user.avatar} alt="Settings" className="settings-icon" />
+              <div style={{ fontSize: '18px', marginRight: '10px' }}>{user.name}</div>
+              {user.avatar ? (
+                <img
+                  src={
+                    user.avatar ? appConfig.baseURL + '/storage/images/' + user.avatar : appConfig.baseURL + '/storage/images/user_icon.png'
+                  }
+                  alt="Settings"
+                  className="settings-icon "
+                />
+              ) : (
+                <div
+                  className="user-icon "
+                  style={{
+                    backgroundColor: getBackgroundColor(user.name)
+                  }}
+                >
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+              )}
             </Dropdown.Toggle>
             <Dropdown.Menu align="end" className="profile-notification">
-              <div className="pro-head">
-                <img src={appConfig.baseURL + '/storage/images/' + user.avatar} className="img-radius" alt="User Profile" />
+              <div className="pro-head d-flex align-items-center">
+                {user.avatar ? (
+                  <img
+                    src={
+                      user.avatar
+                        ? appConfig.baseURL + '/storage/images/' + user.avatar
+                        : appConfig.baseURL + '/storage/images/user_icon.png'
+                    }
+                    alt="Settings"
+                    className="settings-icon me-2"
+                  />
+                ) : (
+                  <div
+                    className="user-icon me-2"
+                    style={{
+                      backgroundColor: getBackgroundColor(user.name)
+                    }}
+                  >
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
                 <span>{user.name}</span>
                 <a href="#" onClick={logoutHandler} className="dud-logout" title="Logout">
                   {!isLoading ? (
