@@ -667,7 +667,7 @@ const Jenis = () => {
             <Button type="button" variant="secondary" onClick={handleCloseMultipleInsertModal}>
               Tutup
             </Button>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" disabled={isLoadingBtn}>
               {!isLoadingBtn ? (
                 'Simpan'
               ) : (
@@ -759,7 +759,7 @@ const Jenis = () => {
             <Button type="button" variant="secondary" onClick={handleCloseModal}>
               Tutup
             </Button>
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" disabled={isLoadingBtn}>
               {!isLoadingBtn ? (
                 'Simpan'
               ) : (

@@ -228,7 +228,7 @@ const Setting = () => {
                     />
                     {formErrorsPassword.confirm_password && <div className="invalid-feedback">{formErrorsPassword.confirm_password}</div>}
                   </Form.Group>
-                  <Button variant="warning" className="w-100" type="submit">
+                  <Button variant="warning" className="w-100" type="submit" disabled={isLoadingBtn}>
                     {!isLoadingBtn ? (
                       'Ubah Password'
                     ) : (

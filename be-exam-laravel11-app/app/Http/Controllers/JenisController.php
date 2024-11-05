@@ -173,7 +173,9 @@ class JenisController extends Controller
     {
         try 
         {
-            $data   = Soal::where('jenis_id',$id)->delete();
+            if(Soal::where('jenis_id',$id)->first()){
+                $data   = Soal::where('jenis_id',$id)->delete();
+            }
             $data   = Jenis::findOrFail($id)->delete();
 
             return response()->json([

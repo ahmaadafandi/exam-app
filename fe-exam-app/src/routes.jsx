@@ -131,7 +131,7 @@ const routes = [
 
       {
         exact: 'true',
-        path: '/soal',
+        path: '/soal-data',
         element: lazy(() => import('./views/soal/Soal'))
       },
 

@@ -166,7 +166,9 @@ class PaketController extends Controller
     {
         try 
         {
-            $data   = Soal::where('paket_to_id',$id)->delete();
+            if(Soal::where('paket_to_id',$id)->first()){
+                $data   = Soal::where('paket_to_id',$id)->delete();
+            }
             $data   = PaketTo::findOrFail($id)->delete();
 
             return response()->json([

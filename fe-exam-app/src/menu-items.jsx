@@ -37,7 +37,7 @@ const menuItems = {
     //           id: 'soal',
     //           title: 'Soal',
     //           type: 'item',
-    //           url: '/soal'
+    //           url: '/soal-data'
     //         },
     //         {
     //           id: 'jenis_soal',

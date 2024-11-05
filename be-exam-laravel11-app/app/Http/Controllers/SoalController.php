@@ -294,7 +294,9 @@ class SoalController extends Controller
     {
         try 
         {
-            $data   = KunciJawaban::where('soal_id',$id)->delete();
+            if(KunciJawaban::where('soal_id', $id)->first()){
+                $data   = KunciJawaban::where('soal_id',$id)->delete();
+            }
             $data   = Soal::findOrFail($id);
             $data->delete();
 

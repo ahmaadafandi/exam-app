@@ -200,7 +200,7 @@ const SignUp1 = () => {
                         Send me the <Link to="#"> Newsletter</Link> weekly.
                       </label>
                     </div> */}
-                    <button className="btn btn-primary mb-4">
+                    <button className="btn btn-primary mb-4" disabled={isLoading}>
                       {!isLoading ? (
                         'Register'
                       ) : (

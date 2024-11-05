@@ -108,7 +108,7 @@ const ManageSoal = () => {
   }, [isEditing, id, navigate]);
 
   const handleBack = () => {
-    navigate('/soal');
+    navigate('/soal-data');
   };
 
   const handleInputChange = (event) => {
@@ -238,7 +238,7 @@ const ManageSoal = () => {
             }).then(() => {
               resetForm();
               setIsLoadingBtn(false);
-              isEditing ? navigate('/soal') : navigate('/soal-manage'); // Uncomment to navigate back after success
+              isEditing ? navigate('/soal-data') : navigate('/soal-manage'); // Uncomment to navigate back after success
             });
           } else {
             throw new Error('Network response was not ok');
@@ -404,7 +404,7 @@ const ManageSoal = () => {
                     <button type="button" className="btn btn-light" onClick={handleBack}>
                       Kembali
                     </button>
-                    <button type="submit" className="btn btn-primary mr-2 btnSimpan">
+                    <button type="submit" className="btn btn-primary mr-2 btnSimpan" disabled={isLoadingBtn}>
                       {!isLoadingBtn ? (
                         'Simpan'
                       ) : (
